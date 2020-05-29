@@ -1,0 +1,2 @@
+rootProject.name='Tellma Mobile'
+include ':app'
