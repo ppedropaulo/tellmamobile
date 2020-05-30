@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Tellma Mobile</string>
+    <string name="enter">Entrar</string>
+    <string name="register">Cadastrar</string>
 </resources>
