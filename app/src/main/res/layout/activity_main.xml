@@ -46,6 +46,7 @@
         android:layout_marginTop="32dp"
         android:background="@drawable/bg_button_rounded"
         android:textColor="@android:color/white"
+        android:onClick="login"
         android:text="@string/enter"
         app:layout_constraintEnd_toEndOf="@+id/editText2"
         app:layout_constraintStart_toStartOf="@+id/editText2"

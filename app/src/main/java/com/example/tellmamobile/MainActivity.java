@@ -18,4 +18,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
+
+    public void login(View view) {
+        Intent intent = new Intent(this, ChatListActivity.class);
+        startActivity(intent);
+    }
 }
