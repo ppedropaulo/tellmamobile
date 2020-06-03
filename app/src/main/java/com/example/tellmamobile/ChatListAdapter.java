@@ -1,50 +1,37 @@
 package com.example.tellmamobile;
 
-import android.view.LayoutInflater;
+import android.app.Activity;
+import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
 
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
-
-public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyViewHolder> {
+public class ChatListAdapter extends BaseAdapter {
     private String[] chatListDataSet;
+    private final Activity act;
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        public CardView cardView;
-        public MyViewHolder(CardView v) {
-            super(v);
-            cardView = v;
-        }
-    }
-
-    public ChatListAdapter(String[] myChatListDataSet) {
+    public ChatListAdapter(String[] myChatListDataSet, Activity act) {
         chatListDataSet = myChatListDataSet;
+        this.act = act;
     }
 
-    // Create new views (invoked by the layout manager)
-    @Override
-    public ChatListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
-                                                           int viewType) {
+    @Override public int getCount() { return chatListDataSet.length; }
+
+    @Override public Object getItem(int position) { return chatListDataSet[position]; }
+
+    @Override public long getItemId(int position) { return 0; }
+
+    @Override public View getView(int position, View convertView, ViewGroup parent) {
         // create a new view
-        CardView v = (CardView) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_chat_list, parent, false);
+        View view = act.getLayoutInflater().inflate(R.layout.card_chat_list, parent, false);
 
-        MyViewHolder vh = new MyViewHolder(v);
-        return vh;
-    }
+        String chat = chatListDataSet[position];
 
-    @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        Button buttonView = (Button) holder.cardView.findViewById(R.id.chat_button);
-        buttonView.setText(chatListDataSet[position]);
+        TextView textView = (TextView) view.findViewById(R.id.chat_text);
+        textView.setText(chat);
 
-    }
+        return view;
 
-    @Override
-    public int getItemCount() {
-        return chatListDataSet.length;
     }
 }
 

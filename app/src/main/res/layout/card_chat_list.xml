@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_view"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:background="#8F5B5B"
-    android:padding="@dimen/text_margin"
-    card_view:cardCornerRadius="4dp">
+    android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/chat_button"
+    <TextView
+        android:id="@+id/chat_text"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="64dp"
-        android:background="@drawable/bg_button_rounded"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:gravity="center"
-        android:onClick="openRegisterActivity"
-        android:text="@string/register"
-        android:textColor="@android:color/white" />
-</androidx.cardview.widget.CardView>
+        android:textSize="30sp" />
+
+</LinearLayout>
