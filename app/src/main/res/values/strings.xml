@@ -94,4 +94,7 @@
     </string>
     <string name="action_settings">Settings</string>
     <string name="chat_example">Exemplo</string>
+    <string name="chats">Conversas</string>
+    <string name="new_chat">Nova Conversa</string>
+    <string name="logout">Sair</string>
 </resources>

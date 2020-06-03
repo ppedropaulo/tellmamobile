@@ -1,17 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="clip_vertical"
+    android:orientation="vertical"
     tools:context=".ChatListActivity">
+
+    <LinearLayout
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top|end"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/chats"
+            android:textSize="30sp"
+            tools:text="Conversas" />
+
+        <Button
+            android:id="@+id/new_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="3dp"
+            android:background="@drawable/bg_button_rounded"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="@string/new_chat"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginTop="0dp"
+            android:background="@drawable/bg_button_rounded"
+            android:text="@string/logout"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
 
     <ListView
         android:id="@+id/chat_list_recycler_view"
-        android:scrollbars="vertical"
-        android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:scrollbars="vertical">
 
+    </ListView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
