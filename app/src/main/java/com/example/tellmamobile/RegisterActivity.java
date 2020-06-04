@@ -31,7 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText textUsername;
     private EditText textPassword;
     private EditText textPasswordConfirm;
-    private Button mBtnEnter;
+    public static final String TAG = "REGISTER";
 
 
     @Override
@@ -97,7 +97,7 @@ public class RegisterActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_SHORT).show();
             }
         });
-
+        request.setTag(TAG);
         Requests.getInstance(this.getApplicationContext()).addToRequestQueue(request);
     }
 
