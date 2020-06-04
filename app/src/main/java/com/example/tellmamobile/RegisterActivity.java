@@ -52,13 +52,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
-    public void returnLoginActivity(View view){
-
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-
-    }
-
 
 
     public void register(){
@@ -87,6 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
                     String success = response.getString("sucessfull");
 
                     if(success.equals("true")){
+
                         Toast.makeText(getApplicationContext(),"Registrado com sucesso",Toast.LENGTH_SHORT).show();
                     }
                     if(success.equals("false")){
@@ -103,8 +97,8 @@ public class RegisterActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_SHORT).show();
             }
         });
-        RequestQueue queue = Volley.newRequestQueue(this);
-        queue.add(request);
+
+        Requests.getInstance(this.getApplicationContext()).addToRequestQueue(request);
     }
 
 
