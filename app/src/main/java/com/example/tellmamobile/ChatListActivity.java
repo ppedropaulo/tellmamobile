@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
 
 public class ChatListActivity extends AppCompatActivity {
@@ -21,5 +23,12 @@ public class ChatListActivity extends AppCompatActivity {
 
         ChatListAdapter chatListAdapter = new ChatListAdapter(chatListDataSet, this);
         listView.setAdapter(chatListAdapter);
+    }
+
+    public void onLogout(View view){
+        UserSession.eraseInstance(this.getApplicationContext());
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

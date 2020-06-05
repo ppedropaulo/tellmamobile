@@ -29,6 +29,10 @@ public class UserSession { //Singleton para acesso ao usuário
         return instance;
     }
 
+    public static synchronized void eraseInstance(Context context){
+        instance = null;
+    }
+
     public String getUsername(){
         return instance.username;
     }
