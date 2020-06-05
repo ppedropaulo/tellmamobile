@@ -56,7 +56,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void onSuccessfulSignIn() {
+    public void onSuccessfulSignIn(String name, String password) {
+        UserSession.setInstance(this.getApplicationContext(), name, password);
         Intent intent = new Intent(this, ChatListActivity.class);
         startActivity(intent);
         finish();
@@ -65,15 +66,15 @@ public class MainActivity extends AppCompatActivity {
     public void login(){
         String url="http://34.71.71.141/apirest/login";
 
-        String name = textUser.getText().toString();
-        String pass = textPass.getText().toString();
+        final String name = textUser.getText().toString();
+        final String pass = textPass.getText().toString();
 
         if (name == null || name.isEmpty() || pass == null || pass.isEmpty() ) {
             Toast.makeText(this, "Todos os campos devem ser preenchidos", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Map<String, String> params = new HashMap();
+        final Map<String, String> params = new HashMap();
         params.put("username",name);
         params.put("password",pass);
 
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                     if(success.equals("true")){
                         UserSession.setInstance(getApplicationContext(),username,id);
                         Toast.makeText(getApplicationContext(),"Bem vindo, "+UserSession.getInstance(getApplicationContext()).getUsername()+"!",Toast.LENGTH_SHORT).show();
-                        onSuccessfulSignIn();
+                        onSuccessfulSignIn(name, pass);
                     }
                 } catch (JSONException exception) {
                     Log.d("JSONException", "Json exception catched :".concat(exception.getMessage()));
