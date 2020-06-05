@@ -43,6 +43,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStop () {
+        super.onStop();
+        if (Requests.getInstance(this.getApplicationContext()).getRequestQueue() != null) {
+            Requests.getInstance(this.getApplicationContext()).getRequestQueue().cancelAll(TAG);
+        }
+    }
+
     public void openRegisterActivity(View view) {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
