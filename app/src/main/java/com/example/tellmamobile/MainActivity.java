@@ -48,9 +48,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void login(View view) {
+    public void onSuccessfulSignIn() {
         Intent intent = new Intent(this, ChatListActivity.class);
         startActivity(intent);
+        finish();
     }
 
     public void login(){
@@ -81,15 +82,15 @@ public class MainActivity extends AppCompatActivity {
                     String id = response.getString("id");
                     String username = response.getString("username");
                     UserSession.setInstance(getApplicationContext(),username,id);
-
                     if(success.equals("true")){
                         UserSession.setInstance(getApplicationContext(),username,id);
                         Toast.makeText(getApplicationContext(),"Bem vindo, "+UserSession.getInstance(getApplicationContext()).getUsername()+"!",Toast.LENGTH_SHORT).show();
+                        onSuccessfulSignIn();
                     }
                 } catch (JSONException exception) {
                     Log.d("JSONException", "Json exception catched :".concat(exception.getMessage()));
                 }
-            }
+            };
 
         }, new Response.ErrorListener() {
             @Override
