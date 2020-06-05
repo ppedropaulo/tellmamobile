@@ -75,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 try {
                     String success = response.getString("sucessfull");
+                    if(success.equals("false")){
+                        Toast.makeText(getApplicationContext(),"Usuário ou senha incorretos",Toast.LENGTH_SHORT).show();
+                    }
                     String id = response.getString("id");
                     String username = response.getString("username");
                     UserSession.setInstance(getApplicationContext(),username,id);
@@ -82,9 +85,6 @@ public class MainActivity extends AppCompatActivity {
                     if(success.equals("true")){
                         UserSession.setInstance(getApplicationContext(),username,id);
                         Toast.makeText(getApplicationContext(),"Bem vindo, "+UserSession.getInstance(getApplicationContext()).getUsername()+"!",Toast.LENGTH_SHORT).show();
-                    }
-                    if(success.equals("false")){
-                        Toast.makeText(getApplicationContext(),"Usuário ou senha incorretos",Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException exception) {
                     Log.d("JSONException", "Json exception catched :".concat(exception.getMessage()));
