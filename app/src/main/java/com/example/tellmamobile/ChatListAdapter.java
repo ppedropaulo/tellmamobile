@@ -1,37 +1,51 @@
 package com.example.tellmamobile;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class ChatListAdapter extends BaseAdapter {
-    private String[] chatListDataSet;
-    private final Activity act;
+import java.util.ArrayList;
 
-    public ChatListAdapter(String[] myChatListDataSet, Activity act) {
+public class ChatListAdapter extends BaseAdapter {
+    private ArrayList<Chat> chatListDataSet;
+    private Context mContext;
+
+    public ChatListAdapter(Context context, ArrayList<Chat> myChatListDataSet) {
         chatListDataSet = myChatListDataSet;
-        this.act = act;
+        mContext = context;
     }
 
-    @Override public int getCount() { return chatListDataSet.length; }
+    @Override public int getCount() {
+        if (chatListDataSet == null || chatListDataSet.size() == 0){
+            return 0;
+        }
 
-    @Override public Object getItem(int position) { return chatListDataSet[position]; }
+        return chatListDataSet.size();
+    }
 
-    @Override public long getItemId(int position) { return 0; }
+    @Override public Object getItem(int position) { return chatListDataSet.get(position); }
+
+    @Override public long getItemId(int position) { return (long) chatListDataSet.get(position).getRoomId(); }
 
     @Override public View getView(int position, View convertView, ViewGroup parent) {
         // create a new view
-        View view = act.getLayoutInflater().inflate(R.layout.card_chat_list, parent, false);
+        View view = View.inflate(mContext, R.layout.card_chat_list, null);
 
-        String chat = chatListDataSet[position];
+        Chat chat = chatListDataSet.get(position);
 
         TextView textView = (TextView) view.findViewById(R.id.chat_text);
-        textView.setText(chat);
+        textView.setText(chat.getName());
 
         return view;
 
+    }
+
+    public void setChatListDataSet(ArrayList<Chat> chatListDataSet) {
+        this.chatListDataSet = chatListDataSet;
+        this.notifyDataSetChanged();
     }
 }
 

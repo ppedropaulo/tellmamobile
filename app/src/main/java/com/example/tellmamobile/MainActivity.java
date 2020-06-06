@@ -2,6 +2,7 @@ package com.example.tellmamobile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         final Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                login();
+                login(v);
             }
         });
     }
@@ -48,12 +49,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void login(View view) {
-        Intent intent = new Intent(this, ChatListActivity.class);
-        startActivity(intent);
-    }
-
-    public void login(){
+    public void login(View view){
         String url="http://34.71.71.141/apirest/login";
 
         String name = textUser.getText().toString();
@@ -70,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
         JSONObject parameters = new JSONObject(params);
 
+        final Activity act = this;
+
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url,parameters, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -82,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
                     if(success.equals("true")){
                         UserSession.setInstance(getApplicationContext(),username,id);
                         Toast.makeText(getApplicationContext(),"Bem vindo, "+UserSession.getInstance(getApplicationContext()).getUsername()+"!",Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(act, ChatListActivity.class);
+                        startActivity(intent);
                     }
                     if(success.equals("false")){
                         Toast.makeText(getApplicationContext(),"Usuário ou senha incorretos",Toast.LENGTH_SHORT).show();
@@ -97,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_SHORT).show();
             }
         });
+
         request.setTag(TAG);
         Requests.getInstance(this.getApplicationContext()).addToRequestQueue(request);
     }
