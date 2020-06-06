@@ -46,6 +46,9 @@ public class CreateNewChatDialogFragment extends DialogFragment {
             users.put(user);
         }
 
+        String own_user = UserSession.getInstance().getUsername();
+        users.put(own_user);
+
         JSONObject json = new JSONObject();
         try {
             json.put("name", name);
