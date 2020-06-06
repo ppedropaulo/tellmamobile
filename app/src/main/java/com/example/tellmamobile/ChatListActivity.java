@@ -21,7 +21,6 @@ import java.util.Arrays;
 
 public class ChatListActivity extends AppCompatActivity {
 
-    private ArrayList<Chat> chatListDataSet;
     private ChatListAdapter chatListAdapter;
     public static final String TAG = "ROOMS";
 
@@ -32,35 +31,33 @@ public class ChatListActivity extends AppCompatActivity {
 
         getChats();
 
-        ListView listView = (ListView) findViewById(R.id.chat_list_recycler_view);
+        ArrayList<Chat> initialData = new ArrayList<Chat>();
+        chatListAdapter = new ChatListAdapter(this, initialData);
 
-        chatListAdapter = new ChatListAdapter(this, chatListDataSet);
+        ListView listView = (ListView) findViewById(R.id.chat_list_recycler_view);
         listView.setAdapter(chatListAdapter);
     }
 
-    protected void getChats() {
+    private void handleChatResponse(JSONArray response){
+        Gson gson = new Gson();
+        Chat[] newChatList = gson.fromJson(response.toString(), Chat[].class);
+
+        if (newChatList == null || newChatList.length == 0) {
+            return;
+        }
+
+        ArrayList<Chat> newChatArrayList = new ArrayList<Chat>(Arrays.asList(newChatList));
+        chatListAdapter.setChatListDataSet(newChatArrayList);
+    }
+
+    private void getChatRequest(String userID){
         String url = "http://34.71.71.141/apirest/rooms";
-
-        UserSession user = UserSession.getInstance(this);
-        String userID = user.getId();
-
         String urlFormatted = String.format("%1$s?user_id=%2$s", url, userID);
-
-        final ChatListActivity act = this;
-
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, urlFormatted, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                Gson gson = new Gson();
-                Chat[] newChatList = gson.fromJson(response.toString(), Chat[].class);
-                if (newChatList == null || newChatList.length == 0) {
-                    return;
-                }
-
-                ArrayList<Chat> newChatArrayList = new ArrayList<Chat>(Arrays.asList(newChatList));
-                act.chatListAdapter.setChatListDataSet(newChatArrayList);
-
+                handleChatResponse(response);
             }
 
         }, new Response.ErrorListener() {
@@ -74,8 +71,16 @@ public class ChatListActivity extends AppCompatActivity {
         Requests.getInstance(this.getApplicationContext()).addToRequestQueue(request);
     }
 
+    protected void getChats() {
+        UserSession user = UserSession.getInstance(this);
+        String userID = user.getId();
+
+        getChatRequest(userID);
+    }
+
     public void onLogout(View view){
         UserSession.eraseInstance(this.getApplicationContext());
+
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
