@@ -9,13 +9,14 @@ public class UserSession { //Singleton para acesso ao usuário
     private String id;
     private static Context ctx;
 
+
     private UserSession(Context context){
         ctx = context;
     }
 
-    public static synchronized UserSession getInstance(Context context) {
+    public static synchronized UserSession getInstance() {
         if (instance == null) {
-            instance = new UserSession(context);
+            return null;
         }
         return instance;
     }
