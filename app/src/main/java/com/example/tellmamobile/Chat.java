@@ -1,17 +1,17 @@
 package com.example.tellmamobile;
 
 public class Chat {
-    private Number roomId;
+    private Long roomId;
     private String name;
 
 
-    public Chat(Number roomId, String name) {
+    public Chat(Long roomId, String name) {
         this.roomId = roomId;
         this.name = name;
     }
 
 
-    public Number getRoomId() {
+    public Long getRoomId() {
         return roomId;
     }
 
