@@ -27,29 +27,36 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        Intent intent = getIntent(); // gets the previously created intent
-        Long chatId = intent.getLongExtra("chatId", 0);
-        String chatName = intent.getStringExtra("chatName");
-        this.setTitle(chatName);
+        this.setTitleAccordingChat();
+        this.getMessages();
 
         editMessage = findViewById(R.id.editMessage);
         messagesListview = findViewById(R.id.listViewMensagens);
         messagesListview.setDivider(null);
         messagesListview.setDividerHeight(0);
-        messages = new ArrayList<Message>();
 
-        Log.d("chatID", String.valueOf(chatId));
+        messages = new ArrayList<Message>();
         messages.add(new Message(UserSession.getInstance().getId(),"Seja bem vindo a aula"));
         messages.add(new Message(UserSession.getInstance().getId(),"Lab Prog 3"));
-
         messages.add(new Message("1","Obrigado"));
         messages.add(new Message(UserSession.getInstance().getId(),"Exemplo de activity para envio de msg"));
 
         adapter = new MessageAdapter(this, messages);
-
         messagesListview.setAdapter(adapter);
+    }
 
+    private void getMessages(){
+        Intent intent = getIntent();
+        Long chatId = intent.getLongExtra("chatId", 0);
+        System.out.println(chatId);
 
+    }
+
+    private void setTitleAccordingChat(){
+        Intent intent = getIntent();
+        String chatName = intent.getStringExtra("chatName");
+
+        this.setTitle(chatName);
     }
 
     public void sendMessage(View view){
