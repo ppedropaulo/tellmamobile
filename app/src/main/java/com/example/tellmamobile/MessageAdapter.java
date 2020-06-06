@@ -1,46 +1,61 @@
 package com.example.tellmamobile;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class MessageAdapter extends ArrayAdapter<Message> {
+public class MessageAdapter extends BaseAdapter {
 
-    private final Activity context;
+    private final Context mcontext;
 
-    private final ArrayList<Message> messages;
+    private ArrayList<Message> messages;
 
-    public MessageAdapter(Activity context, ArrayList<Message> messages) {
-        super(context,0, messages);
-        // TODO Auto-generated constructor stub
-
-        this.context=context;
-        this.messages = messages;
-
+    public MessageAdapter(Context context, ArrayList<Message> messageList) {
+        mcontext = context;
+        messages = messageList;
     }
 
-    public View getView(int position, View view, ViewGroup parent) {
+    @Override public int getCount() {
+        if (messages == null || messages.size() == 0){
+            return 0;
+        }
 
-        LayoutInflater inflater=context.getLayoutInflater();
+        return messages.size();
+    }
+
+    @Override public Message getItem(int position) { return messages.get(position); }
+
+    @Override public long getItemId(int position) { return (long) messages.get(position).getId(); }
+
+    @Override public View getView(int position, View view, ViewGroup parent) {
 
         View rowView;
+
         String messageUserName = messages.get(position).getUsername();
         String currentUserName = UserSession.getInstance().getUsername();
 
         if (messageUserName.equals(currentUserName)){
-            rowView=inflater.inflate(R.layout.adapter_mensagem_remetente, null,true);
-        }else{
-            rowView=inflater.inflate(R.layout.adapter_mensagem_destinatario, null,true);
+            rowView = View.inflate(mcontext, R.layout.adapter_mensagem_remetente,null);
+        } else {
+            rowView = View.inflate(mcontext, R.layout.adapter_mensagem_destinatario,null);
         }
 
-        TextView message = rowView.findViewById(R.id.textMensagemTexto);
+        String messageText = messages.get(position).getText();
 
-        message.setText(messages.get(position).getText());
+        TextView message = rowView.findViewById(R.id.textMensagemTexto);
+        message.setText(messageText);
         return rowView;
     };
+
+    public void setMessages(ArrayList<Message> messageListDataSet) {
+        this.messages = messageListDataSet;
+        this.notifyDataSetChanged();
+    }
 }

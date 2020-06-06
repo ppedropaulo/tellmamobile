@@ -42,6 +42,7 @@ public class ChatListActivity extends AppCompatActivity {
                 goToChat(id, chat.getName());
             }
         });
+
         listView.setAdapter(chatListAdapter);
     }
 

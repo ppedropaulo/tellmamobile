@@ -20,14 +20,13 @@ import com.google.gson.GsonBuilder;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ChatActivity extends AppCompatActivity {
 
     private EditText editMessage;
 
-    private ListView messagesListview;
     private MessageAdapter adapter;
-    private ArrayList<Message> messages;
     public static final String TAG = "MESSAGES";
 
     @Override
@@ -39,24 +38,25 @@ public class ChatActivity extends AppCompatActivity {
         this.getMessages();
 
         editMessage = findViewById(R.id.editMessage);
-        messagesListview = findViewById(R.id.listViewMensagens);
-        messagesListview.setDivider(null);
-        messagesListview.setDividerHeight(0);
+        ListView messagesListView = findViewById(R.id.listViewMensagens);
+        messagesListView.setDivider(null);
+        messagesListView.setDividerHeight(0);
 
-        messages = new ArrayList<Message>();
-        // messages.add(new Message(UserSession.getInstance().getId(),"Seja bem vindo a aula", chat, username, date));
-        // messages.add(new Message(UserSession.getInstance().getId(),"Lab Prog 3", chat, username, date));
-        // messages.add(new Message("1","Obrigado", chat, username, date));
-        // messages.add(new Message(UserSession.getInstance().getId(),"Exemplo de activity para envio de msg", chat, username, date));
-
+        ArrayList<Message> messages = new ArrayList<Message>();
         adapter = new MessageAdapter(this, messages);
-        messagesListview.setAdapter(adapter);
+        messagesListView.setAdapter(adapter);
     }
 
     private void handleMessagesResponse(JSONArray response){
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-        Message[] newChatList = gson.fromJson(response.toString(), Message[].class);
-        System.out.println(newChatList);
+        Message[] newMessageList = gson.fromJson(response.toString(), Message[].class);
+
+        if (newMessageList == null || newMessageList.length == 0) {
+            return;
+        }
+
+        ArrayList<Message> newMessageArrayList = new ArrayList<Message>(Arrays.asList(newMessageList));
+        adapter.setMessages(newMessageArrayList);
     }
 
     private void getMessagesRequest(Long chatId){
