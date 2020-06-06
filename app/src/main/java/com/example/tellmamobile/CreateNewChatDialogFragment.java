@@ -1,13 +1,16 @@
 package com.example.tellmamobile;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
@@ -33,10 +36,27 @@ public class CreateNewChatDialogFragment extends DialogFragment {
     String TAG = "NEW_CHAT_MODAL";
     private EditText editChatName;
     private EditText editChatUsers;
-    private void handleResponse(JSONObject response){
-        return;
+
+    private void onSuccessfulNewChat(Activity act){
+        act.recreate();
     }
-    private void NewChatRequest(String name, String users_text){
+
+    private void handleResponse(JSONObject response, Activity act){
+        try {
+            String success = response.getString("sucessfull");
+
+            if(success.equals("false")){
+                Toast.makeText(getContext(),"Erro ao criar sala",Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            onSuccessfulNewChat(act);
+
+        } catch (JSONException exception) {
+            Toast.makeText(getContext(),"Erro na conexão",Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void NewChatRequest(String name, String users_text, final Activity act){
         String url = "http://34.71.71.141/apirest/rooms";
 
         List<String> user_list = new ArrayList<String>(Arrays.asList(users_text.split("\n")));
@@ -60,7 +80,7 @@ public class CreateNewChatDialogFragment extends DialogFragment {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                handleResponse(response);
+                handleResponse(response, act);
             };
 
         }, new Response.ErrorListener() {
@@ -85,7 +105,8 @@ public class CreateNewChatDialogFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         String name = editChatName.getText().toString();
                         String users = editChatUsers.getText().toString();
-                        NewChatRequest(name, users);
+                        NewChatRequest(name, users, getActivity());
+
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
