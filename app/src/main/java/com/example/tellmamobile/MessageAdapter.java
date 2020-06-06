@@ -58,4 +58,8 @@ public class MessageAdapter extends BaseAdapter {
         this.messages = messageListDataSet;
         this.notifyDataSetChanged();
     }
+
+    public void addMessage(Message newMessage){
+        this.messages.add(newMessage);
+    }
 }

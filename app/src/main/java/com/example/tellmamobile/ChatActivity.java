@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -21,12 +20,14 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Random;
 
 public class ChatActivity extends AppCompatActivity {
 
     private EditText editMessage;
-
     private MessageAdapter adapter;
+
     public static final String TAG = "MESSAGES";
 
     @Override
@@ -80,10 +81,13 @@ public class ChatActivity extends AppCompatActivity {
         Requests.getInstance(this.getApplicationContext()).addToRequestQueue(request);
     }
 
-    private void getMessages(){
+    private Long getChatId(){
         Intent intent = getIntent();
-        Long chatId = intent.getLongExtra("chatId", 0);
+        return intent.getLongExtra("chatId", 0);
+    }
 
+    private void getMessages(){
+        Long chatId = getChatId();
         getMessagesRequest(chatId);
     }
 
@@ -94,17 +98,25 @@ public class ChatActivity extends AppCompatActivity {
         this.setTitle(chatName);
     }
 
-    public void sendMessage(View view){
+    private Long getRandomID(){
+        Random rd = new Random();
+        return rd.nextLong();
+    }
 
-        Log.d("TAG","EnviarMensagem");
-
+    private Message formatNewMessage(){
         String message = editMessage.getText().toString();
+        Long chatId = getChatId();
+        String username = UserSession.getInstance().getUsername();
+        Date date = new Date();
+        Long newID = getRandomID();
 
-        // messages.add(new Message(UserSession.getInstance().getId(), message, chat, username, date));
+        Message newMessage = new Message(newID, message, chatId, username, date);
+        return newMessage;
+    }
 
-        adapter.notifyDataSetChanged();
-
+    public void sendMessage(View view){
+        Message newMessage = formatNewMessage();
+        adapter.addMessage(newMessage);
         editMessage.setText("");
-
     }
 }
