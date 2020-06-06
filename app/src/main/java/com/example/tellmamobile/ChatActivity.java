@@ -9,18 +9,25 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 
 public class ChatActivity extends AppCompatActivity {
-
-    private TextView textViewNome;
 
     private EditText editMessage;
 
     private ListView messagesListview;
     private MessageAdapter adapter;
     private ArrayList<Message> messages;
+    public static final String TAG = "MESSAGES";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +52,36 @@ public class ChatActivity extends AppCompatActivity {
         messagesListview.setAdapter(adapter);
     }
 
+    private void handleMessagesResponse(JSONArray response){
+        System.out.println(response);
+    }
+
+    private void getMessagesRequest(Long chatId){
+        String url = "http://34.71.71.141/apirest/messages";
+        String urlFormatted = String.format("%1$s?room_id=%2$s", url, chatId);
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, urlFormatted, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                handleMessagesResponse(response);
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        request.setTag(TAG);
+        Requests.getInstance(this.getApplicationContext()).addToRequestQueue(request);
+    }
+
     private void getMessages(){
         Intent intent = getIntent();
         Long chatId = intent.getLongExtra("chatId", 0);
-        System.out.println(chatId);
 
+        getMessagesRequest(chatId);
     }
 
     private void setTitleAccordingChat(){
