@@ -2,10 +2,8 @@ package com.example.tellmamobile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,9 +37,18 @@ public class MainActivity extends AppCompatActivity {
         final Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                login(v);
+                login();
             }
         });
+    }
+
+    @Override
+    protected void onStop () {
+        super.onStop();
+
+        if (Requests.getInstance(this.getApplicationContext()).getRequestQueue() != null) {
+            Requests.getInstance(this.getApplicationContext()).getRequestQueue().cancelAll(TAG);
+        }
     }
 
     public void openRegisterActivity(View view) {
@@ -49,58 +56,72 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void login(View view){
+    private void onSuccessfulSignIn(String name, String id) {
+        UserSession.setInstance(this.getApplicationContext(), name, id);
+
+        Intent intent = new Intent(this, ChatListActivity.class);
+        Toast.makeText(getApplicationContext(),"Bem vindo, "+UserSession.getInstance(getApplicationContext()).getUsername()+"!",Toast.LENGTH_SHORT).show();
+        startActivity(intent);
+        finish();
+    }
+
+    private void handleLoginResponse(JSONObject response){
+        try {
+            String success = response.getString("sucessfull");
+
+            if(success.equals("false")){
+                String error = response.getString("error");
+                Toast.makeText(getApplicationContext(),error,Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String id = response.getString("id");
+            String username = response.getString("username");
+
+            onSuccessfulSignIn(username, id);
+
+        } catch (JSONException exception) {
+            Toast.makeText(getApplicationContext(),"Erro na conexão",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void loginRequest(String name, String pass){
         String url="http://34.71.71.141/apirest/login";
 
-        String name = textUser.getText().toString();
-        String pass = textPass.getText().toString();
+        final Map<String, String> params = new HashMap();
+        params.put("username",name);
+        params.put("password",pass);
+
+        JSONObject parameters = new JSONObject(params);
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url,parameters, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                handleLoginResponse(response);
+            };
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(),"Erro na conexão",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        request.setTag(TAG);
+        Requests.getInstance(this.getApplicationContext()).addToRequestQueue(request);
+    }
+
+    public void login(){
+
+        final String name = textUser.getText().toString();
+        final String pass = textPass.getText().toString();
 
         if (name == null || name.isEmpty() || pass == null || pass.isEmpty() ) {
             Toast.makeText(this, "Todos os campos devem ser preenchidos", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Map<String, String> params = new HashMap();
-        params.put("username",name);
-        params.put("password",pass);
-
-        JSONObject parameters = new JSONObject(params);
-
-        final Activity act = this;
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url,parameters, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    String success = response.getString("sucessfull");
-                    String id = response.getString("id");
-                    String username = response.getString("username");
-                    UserSession.setInstance(getApplicationContext(),username,id);
-
-                    if(success.equals("true")){
-                        UserSession.setInstance(getApplicationContext(),username,id);
-                        Toast.makeText(getApplicationContext(),"Bem vindo, "+UserSession.getInstance(getApplicationContext()).getUsername()+"!",Toast.LENGTH_SHORT).show();
-
-                        Intent intent = new Intent(act, ChatListActivity.class);
-                        startActivity(intent);
-                    }
-                    if(success.equals("false")){
-                        Toast.makeText(getApplicationContext(),"Usuário ou senha incorretos",Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException exception) {
-                    Log.d("JSONException", "Json exception catched :".concat(exception.getMessage()));
-                }
-            }
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        request.setTag(TAG);
-        Requests.getInstance(this.getApplicationContext()).addToRequestQueue(request);
+        loginRequest(name, pass);
     }
 
 }

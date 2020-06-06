@@ -23,10 +23,14 @@ public class UserSession { //Singleton para acesso ao usuário
     public static synchronized UserSession setInstance(Context context,String name, String id) {
         if (instance == null) {
             instance = new UserSession(context);
-            instance.id=id;
-            instance.username=name;
+            instance.id= id;
+            instance.username= name;
         }
         return instance;
+    }
+
+    public static synchronized void eraseInstance(Context context){
+        instance = null;
     }
 
     public String getUsername(){
