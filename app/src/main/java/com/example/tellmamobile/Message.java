@@ -1,28 +1,40 @@
 package com.example.tellmamobile;
 
+import java.util.Date;
+
 public class Message {
 
-    private String idUser;
+    private Long id;
     private String text;
+    private Long chat;
+    private String username;
+    private Date date;
 
-    public Message(String idUser, String text) {
-        this.idUser = idUser;
+    public Message(Long id, String text, Long chat, String username, Date date) {
+        this.id = id;
         this.text = text;
+        this.chat = chat;
+        this.username = username;
+        this.date = date;
     }
 
-    public String getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(String idUser) {
-        this.idUser = idUser;
+    public Long getId() {
+        return id;
     }
 
     public String getText() {
         return text;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public Long getChat() {
+        return chat;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public Date getDate() {
+        return date;
     }
 }

@@ -29,7 +29,10 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         LayoutInflater inflater=context.getLayoutInflater();
 
         View rowView;
-        if (messages.get(position).getIdUser().compareTo(UserSession.getInstance().getId()) == 0 ){
+        String messageUserName = messages.get(position).getUsername();
+        String currentUserName = UserSession.getInstance().getUsername();
+
+        if (messageUserName.equals(currentUserName)){
             rowView=inflater.inflate(R.layout.adapter_mensagem_remetente, null,true);
         }else{
             rowView=inflater.inflate(R.layout.adapter_mensagem_destinatario, null,true);
