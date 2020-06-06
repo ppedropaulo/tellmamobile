@@ -2,6 +2,9 @@ package com.example.tellmamobile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -103,6 +106,22 @@ public class ChatListActivity extends AppCompatActivity {
     }
 
     public void onNewChat(View view){
-        return;
+        AlertDialog alertDialog = new AlertDialog.Builder(ChatListActivity.this).create();
+        alertDialog.setTitle("Nova conversa");
+        // Change setMessage to a personalized form layout
+        alertDialog.setMessage("Alert message to be shown");
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancelar",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
     }
 }
