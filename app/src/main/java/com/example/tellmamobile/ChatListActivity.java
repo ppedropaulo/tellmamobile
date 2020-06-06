@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -33,15 +34,25 @@ public class ChatListActivity extends AppCompatActivity {
         getChats();
 
         ListView listView = (ListView) findViewById(R.id.chat_list_recycler_view);
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                goToChat();
+            }
+        });
         chatListAdapter = new ChatListAdapter(this, chatListDataSet);
         listView.setAdapter(chatListAdapter);
+    }
+
+    private void goToChat(){
+        Intent intent = new Intent(this, ChatActivity.class);
+        startActivity(intent);
     }
 
     protected void getChats() {
         String url = "http://34.71.71.141/apirest/rooms";
 
-        UserSession user = UserSession.getInstance(this);
+        UserSession user = UserSession.getInstance();
         String userID = user.getId();
 
         String urlFormatted = String.format("%1$s?user_id=%2$s", url, userID);
