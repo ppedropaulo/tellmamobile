@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         UserSession.setInstance(this.getApplicationContext(), name, id);
 
         Intent intent = new Intent(this, ChatListActivity.class);
-        Toast.makeText(getApplicationContext(),"Bem vindo, "+UserSession.getInstance(getApplicationContext()).getUsername()+"!",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),"Bem vindo, "+UserSession.getInstance().getUsername()+"!",Toast.LENGTH_SHORT).show();
         startActivity(intent);
         finish();
     }
