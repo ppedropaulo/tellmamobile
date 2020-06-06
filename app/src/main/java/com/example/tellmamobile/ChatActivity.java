@@ -26,13 +26,17 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        Intent intent = getIntent(); // gets the previously created intent
+        Long chatId = intent.getLongExtra("chatId", 0);
+        String chatName = intent.getStringExtra("chatName");
+        this.setTitle(chatName);
+
         editMessage = findViewById(R.id.editMessage);
         messagesListview = findViewById(R.id.listViewMensagens);
         messagesListview.setDivider(null);
         messagesListview.setDividerHeight(0);
         messages = new ArrayList<Message>();
-        Intent myIntent = getIntent(); // gets the previously created intent
-        Long chatId = myIntent.getLongExtra("chatId", 0);
 
         Log.d("chatID", String.valueOf(chatId));
         messages.add(new Message(UserSession.getInstance().getId(),"Seja bem vindo a aula"));
