@@ -39,14 +39,15 @@ public class ChatListActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                goToChat();
+                goToChat(id);
             }
         });
         listView.setAdapter(chatListAdapter);
     }
 
-    private void goToChat(){
+    private void goToChat(Long id){
         Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra("chatId", id);
         startActivity(intent);
     }
 

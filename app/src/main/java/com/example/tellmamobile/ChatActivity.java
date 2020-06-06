@@ -2,6 +2,7 @@ package com.example.tellmamobile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,16 +26,15 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
         editMessage = findViewById(R.id.editMessage);
-
         messagesListview = findViewById(R.id.listViewMensagens);
-
         messagesListview.setDivider(null);
         messagesListview.setDividerHeight(0);
-
         messages = new ArrayList<Message>();
+        Intent myIntent = getIntent(); // gets the previously created intent
+        Long chatId = myIntent.getLongExtra("chatId", 0);
 
+        Log.d("chatID", String.valueOf(chatId));
         messages.add(new Message(UserSession.getInstance().getId(),"Seja bem vindo a aula"));
         messages.add(new Message(UserSession.getInstance().getId(),"Lab Prog 3"));
 

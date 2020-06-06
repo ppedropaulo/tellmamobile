@@ -1,7 +1,6 @@
 package com.example.tellmamobile;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +29,6 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         LayoutInflater inflater=context.getLayoutInflater();
 
         View rowView;
-        Log.d("my-id", UserSession.getInstance().getId());
-        Log.d("message-id", messages.get(position).getIdUser());
         if (messages.get(position).getIdUser().compareTo(UserSession.getInstance().getId()) == 0 ){
             rowView=inflater.inflate(R.layout.adapter_mensagem_remetente, null,true);
         }else{
