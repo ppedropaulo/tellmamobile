@@ -17,12 +17,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.neovisionaries.ws.client.WebSocket;
+import com.neovisionaries.ws.client.WebSocketFactory;
 
 import org.json.JSONArray;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -32,6 +34,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private EditText editMessage;
     private MessageAdapter adapter;
+    private WebSocket ws = null;
 
     public static final String TAG = "MESSAGES";
 
@@ -42,6 +45,7 @@ public class ChatActivity extends AppCompatActivity {
 
         this.setTitleAccordingChat();
         this.getMessages();
+        this.openWSConnection();
 
         editMessage = findViewById(R.id.editMessage);
         ListView messagesListView = findViewById(R.id.listViewMensagens);
@@ -54,6 +58,16 @@ public class ChatActivity extends AppCompatActivity {
 
         messagesListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         messagesListView.setStackFromBottom(true);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (ws != null) {
+            ws.disconnect();
+            ws = null;
+        }
     }
 
     private ArrayList<Message> sortMessages(ArrayList<Message> messages){
@@ -149,5 +163,15 @@ public class ChatActivity extends AppCompatActivity {
         Message newMessage = formatNewMessage();
         adapter.addMessage(newMessage);
         editMessage.setText("");
+    }
+
+    private void openWSConnection(){
+        String urlFormatted = String.format("%1$s/%2$s", Constants.WEBSOCKET_URL, getChatId());
+        try {
+            ws = new WebSocketFactory().createSocket(urlFormatted);
+            ws.connectAsynchronously();
+        } catch (IOException e) {
+            Toast.makeText(getApplicationContext(), "Erro de conexão", Toast.LENGTH_SHORT).show();
+        }
     }
 }
