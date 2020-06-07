@@ -22,6 +22,9 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Random;
 
@@ -50,6 +53,21 @@ public class ChatActivity extends AppCompatActivity {
         messagesListView.setAdapter(adapter);
     }
 
+    private ArrayList<Message> sortMessages(ArrayList<Message> messages){
+        Collections.sort(messages, new Comparator<Message>() {
+            @Override
+            public int compare(Message m1, Message m2) {
+                Date date1 = m1.getDate();
+                Date date2 = m2.getDate();
+
+
+                return date1.compareTo(date2);
+            }
+        });
+
+        return messages;
+    }
+
     private void handleMessagesResponse(JSONArray response){
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         Message[] newMessageList = gson.fromJson(response.toString(), Message[].class);
@@ -59,6 +77,7 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         ArrayList<Message> newMessageArrayList = new ArrayList<Message>(Arrays.asList(newMessageList));
+        newMessageArrayList = sortMessages(newMessageArrayList);
         adapter.setMessages(newMessageArrayList);
     }
 
