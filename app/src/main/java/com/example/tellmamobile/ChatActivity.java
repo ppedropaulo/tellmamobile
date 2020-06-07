@@ -51,6 +51,9 @@ public class ChatActivity extends AppCompatActivity {
         ArrayList<Message> messages = new ArrayList<Message>();
         adapter = new MessageAdapter(this, messages);
         messagesListView.setAdapter(adapter);
+
+        messagesListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+        messagesListView.setStackFromBottom(true);
     }
 
     private ArrayList<Message> sortMessages(ArrayList<Message> messages){
