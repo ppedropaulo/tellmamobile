@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MessageAdapter extends BaseAdapter {
 
@@ -38,7 +39,9 @@ public class MessageAdapter extends BaseAdapter {
 
         View rowView;
 
-        String messageUserName = messages.get(position).getUsername();
+        Message message = messages.get(position);
+
+        String messageUserName = message.getUsername();
         String currentUserName = UserSession.getInstance().getUsername();
 
         if (messageUserName.equals(currentUserName)){
@@ -47,10 +50,17 @@ public class MessageAdapter extends BaseAdapter {
             rowView = View.inflate(mcontext, R.layout.adapter_mensagem_destinatario,null);
         }
 
-        String messageText = messages.get(position).getText();
+        String messageText = message.getText();
+        TextView messageField = rowView.findViewById(R.id.textMensagemTexto);
+        messageField.setText(messageText);
 
-        TextView message = rowView.findViewById(R.id.textMensagemTexto);
-        message.setText(messageText);
+        TextView usernameField = rowView.findViewById(R.id.username);
+        usernameField.setText(messageUserName);
+
+        String messageDate = message.getFormattedDate();
+        TextView datetimeField = rowView.findViewById(R.id.datetime);
+        datetimeField.setText(messageDate);
+
         return rowView;
     };
 

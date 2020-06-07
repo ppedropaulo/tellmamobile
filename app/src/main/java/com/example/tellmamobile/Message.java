@@ -1,5 +1,6 @@
 package com.example.tellmamobile;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Message {
@@ -36,5 +37,10 @@ public class Message {
 
     public Date getDate() {
         return date;
+    }
+
+    public String getFormattedDate(){
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy HH:mm");
+        return format.format(date);
     }
 }
