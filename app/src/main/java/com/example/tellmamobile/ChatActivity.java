@@ -18,9 +18,12 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.neovisionaries.ws.client.WebSocket;
+import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketFactory;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -135,23 +138,6 @@ public class ChatActivity extends AppCompatActivity {
         this.setTitle(chatName);
     }
 
-    private Long getRandomID(){
-        Random rd = new Random();
-        return rd.nextLong();
-    }
-
-    private Message formatNewMessage(){
-        String message = editMessage.getText().toString();
-        Long chatId = getChatId();
-        assert UserSession.getInstance() != null;
-        String username = UserSession.getInstance().getUsername();
-        Date date = new Date();
-        Long newID = getRandomID();
-
-        Message newMessage = new Message(newID, message, chatId, username, date);
-        return newMessage;
-    }
-
     private void closeKeyBoard(View view){
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -160,8 +146,21 @@ public class ChatActivity extends AppCompatActivity {
     public void sendMessage(View view){
         closeKeyBoard(view);
 
-        Message newMessage = formatNewMessage();
-        adapter.addMessage(newMessage);
+        String message = editMessage.getText().toString();
+        String userId = UserSession.getInstance().getId();
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put("text", message);
+            json.put("userId", userId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (ws.isOpen()) {
+            ws.sendText(json.toString());
+        }
+
         editMessage.setText("");
     }
 
@@ -169,7 +168,21 @@ public class ChatActivity extends AppCompatActivity {
         String urlFormatted = String.format("%1$s/%2$s", Constants.WEBSOCKET_URL, getChatId());
         try {
             ws = new WebSocketFactory().createSocket(urlFormatted);
-            ws.connectAsynchronously();
+            ws.addListener(new WebSocketAdapter() {
+                @Override
+                public void onTextMessage(WebSocket websocket, String response) throws Exception {
+                    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+                    Message newMessage = gson.fromJson(response.toString(), Message.class);
+
+                    adapter.addMessage(newMessage);
+                }
+
+                @Override
+                public void onBinaryMessage(WebSocket websocket, byte[] binary) throws Exception {
+                    System.out.println(binary);
+                }
+
+            }).connectAsynchronously();
         } catch (IOException e) {
             Toast.makeText(getApplicationContext(), "Erro de conexão", Toast.LENGTH_SHORT).show();
         }
