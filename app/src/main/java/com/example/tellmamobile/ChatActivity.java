@@ -123,7 +123,7 @@ public class ChatActivity extends AppCompatActivity {
 
     public void sendMessage(View view){
         closeKeyBoard(view);
-        
+
         Message newMessage = formatNewMessage();
         adapter.addMessage(newMessage);
         editMessage.setText("");

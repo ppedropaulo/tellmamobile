@@ -97,6 +97,19 @@ public class CreateNewChatDialogFragment extends DialogFragment {
         return json;
     }
 
+    private boolean isFormFulled(String name, String users){
+        return name == null || name.isEmpty() || users == null || users.isEmpty();
+    }
+
+    private boolean isFormValid(String name, String users){
+        if (isFormFulled(name, users)) {
+            Toast.makeText(mActivity, "Erro: Todos os campos devem ser preenchidos", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
     private void closeKeyBoard(View view){
         InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -107,6 +120,10 @@ public class CreateNewChatDialogFragment extends DialogFragment {
 
         String name = editChatName.getText().toString();
         String users = editChatUsers.getText().toString();
+
+        if (!isFormValid(name, users)) {
+            return;
+        }
 
         JSONObject json = getNewChatJSON(name, users);
         newChatRequest(json);
