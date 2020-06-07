@@ -4,13 +4,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
@@ -19,8 +17,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,20 +24,19 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CreateNewChatDialogFragment extends DialogFragment {
     String TAG = "NEW_CHAT_MODAL";
     private EditText editChatName;
     private EditText editChatUsers;
+    private Activity mActivity;
 
-    private void onSuccessfulNewChat(Activity act){
-        act.recreate();
+    private void onSuccessfulNewChat(){
+        mActivity.recreate();
     }
 
-    private void handleResponse(JSONObject response, Activity act){
+    private void handleResponse(JSONObject response){
         try {
             String success = response.getString("sucessfull");
 
@@ -50,37 +45,20 @@ public class CreateNewChatDialogFragment extends DialogFragment {
                 return;
             }
 
-            onSuccessfulNewChat(act);
+            onSuccessfulNewChat();
 
         } catch (JSONException exception) {
             Toast.makeText(getContext(),"Erro na conexão",Toast.LENGTH_SHORT).show();
         }
     }
-    private void NewChatRequest(String name, String users_text, final Activity act){
+
+    private void newChatRequest(JSONObject json){
         String url = "http://34.71.71.141/apirest/rooms";
-
-        List<String> user_list = new ArrayList<String>(Arrays.asList(users_text.split("\n")));
-        JSONArray users = new JSONArray();
-
-        for(String user: user_list){
-            users.put(user);
-        }
-
-        String own_user = UserSession.getInstance().getUsername();
-        users.put(own_user);
-
-        JSONObject json = new JSONObject();
-        try {
-            json.put("name", name);
-            json.put("users", users);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                handleResponse(response, act);
+                handleResponse(response);
             };
 
         }, new Response.ErrorListener() {
@@ -93,6 +71,38 @@ public class CreateNewChatDialogFragment extends DialogFragment {
         request.setTag(TAG);
         Requests.getInstance(this.getContext()).addToRequestQueue(request);
     }
+
+    private JSONObject getNewChatJSON(String name, String users_text){
+        List<String> user_list = new ArrayList<String>(Arrays.asList(users_text.split("\n")));
+
+        JSONArray users = new JSONArray();
+        for(String user: user_list){
+            users.put(user);
+        }
+
+        assert UserSession.getInstance() != null;
+        String own_user = UserSession.getInstance().getUsername();
+        users.put(own_user);
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put("name", name);
+            json.put("users", users);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return json;
+    }
+
+    private void createNewChat(){
+        String name = editChatName.getText().toString();
+        String users = editChatUsers.getText().toString();
+
+        JSONObject json = getNewChatJSON(name, users);
+        newChatRequest(json);
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
@@ -101,12 +111,11 @@ public class CreateNewChatDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.new_chat_dialog, null);
         builder.setTitle("Nova conversa");
         builder.setView(view);
+
         builder.setPositiveButton("Ok!", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        String name = editChatName.getText().toString();
-                        String users = editChatUsers.getText().toString();
-                        NewChatRequest(name, users, getActivity());
-
+                        mActivity = getActivity();
+                        createNewChat();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
