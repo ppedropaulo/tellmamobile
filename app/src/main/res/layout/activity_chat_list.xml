@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -8,47 +9,53 @@
     android:orientation="vertical"
     tools:context=".ChatListActivity">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout"
         style="?android:attr/buttonBarButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="top|end"
-        android:orientation="horizontal"
-        android:paddingBottom="10dp">
+        android:gravity="top|end">
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="@string/chats"
             android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="Conversas" />
 
         <Button
             android:id="@+id/new_chat"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="3dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/bg_button_rounded"
+            android:onClick="onNewChat"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:text="@string/new_chat"
-            android:onClick="onNewChat"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView2"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/logout"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_marginTop="0dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:background="@drawable/bg_button_rounded"
-            android:text="@string/logout"
             android:onClick="onLogout"
-            android:textColor="@android:color/white" />
+            android:text="@string/logout"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.375"
+            app:layout_constraintStart_toEndOf="@+id/new_chat"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ListView
         android:id="@+id/chat_list_recycler_view"

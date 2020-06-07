@@ -66,17 +66,6 @@
         app:layout_constraintStart_toStartOf="@+id/editText5"
         app:layout_constraintTop_toBottomOf="@+id/editText5" />
 
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="128dp"
-        android:background="@drawable/bg_button_rounded"
-        android:onClick="returnLoginActivity"
-        android:text="Voltar"
-        android:textColor="@android:color/white"
-        app:layout_constraintEnd_toEndOf="@+id/button3"
-        app:layout_constraintStart_toStartOf="@+id/button3"
-        app:layout_constraintTop_toBottomOf="@+id/button3" />
+    
 
 </androidx.constraintlayout.widget.ConstraintLayout>
