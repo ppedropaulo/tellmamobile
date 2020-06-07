@@ -64,14 +64,12 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void  registerRequest(String username, String password){
-        String url="http://34.71.71.141/apirest/signup";
-
         Map<String, String> params = new HashMap();
         params.put("username",username);
         params.put("password",password);
-
         JSONObject parameters = new JSONObject(params);
 
+        String url = String.format("%1$s%2$s", Constants.API_URL, Constants.REGISTER_ENDPOINT);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url,parameters, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -118,7 +116,7 @@ public class RegisterActivity extends AppCompatActivity {
         String pass = textPassword.getText().toString();
         String passC = textPasswordConfirm.getText().toString();
 
-        if (isFormValid(name, pass, passC)) {
+        if (!isFormValid(name, pass, passC)) {
             return;
         }
 

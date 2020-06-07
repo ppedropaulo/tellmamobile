@@ -53,7 +53,7 @@ public class CreateNewChatDialogFragment extends DialogFragment {
     }
 
     private void newChatRequest(JSONObject json){
-        String url = "http://34.71.71.141/apirest/rooms";
+        String url = String.format("%1$s%2$s", Constants.API_URL, Constants.ROOMS_ENDPOINT);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
             @Override

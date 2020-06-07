@@ -86,13 +86,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loginRequest(String name, String pass){
-        String url="http://34.71.71.141/apirest/login";
-
         final Map<String, String> params = new HashMap();
         params.put("username",name);
         params.put("password",pass);
-
         JSONObject parameters = new JSONObject(params);
+
+        String url = String.format("%1$s%2$s", Constants.API_URL, Constants.LOGIN_ENDPOINT);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url,parameters, new Response.Listener<JSONObject>() {
             @Override

@@ -61,8 +61,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void getMessagesRequest(Long chatId){
-        String url = "http://34.71.71.141/apirest/messages";
-        String urlFormatted = String.format("%1$s?room_id=%2$s", url, chatId);
+        String urlFormatted = String.format("%1$s%2$s?room_id=%3$s", Constants.API_URL, Constants.MESSAGE_ENDPOINT, chatId);
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, urlFormatted, null, new Response.Listener<JSONArray>() {
             @Override

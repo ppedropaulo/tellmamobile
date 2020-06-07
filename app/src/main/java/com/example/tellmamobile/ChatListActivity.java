@@ -67,8 +67,7 @@ public class ChatListActivity extends AppCompatActivity {
     }
 
     private void getChatRequest(String userID){
-        String url = "http://34.71.71.141/apirest/rooms";
-        String urlFormatted = String.format("%1$s?user_id=%2$s", url, userID);
+        String urlFormatted = String.format("%1$s%2$s?user_id=%3$s", Constants.API_URL, Constants.ROOMS_ENDPOINT, userID);
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, urlFormatted, null, new Response.Listener<JSONArray>() {
             @Override
