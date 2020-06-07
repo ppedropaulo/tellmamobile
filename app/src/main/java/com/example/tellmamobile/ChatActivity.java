@@ -2,9 +2,11 @@ package com.example.tellmamobile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -105,6 +107,7 @@ public class ChatActivity extends AppCompatActivity {
     private Message formatNewMessage(){
         String message = editMessage.getText().toString();
         Long chatId = getChatId();
+        assert UserSession.getInstance() != null;
         String username = UserSession.getInstance().getUsername();
         Date date = new Date();
         Long newID = getRandomID();
@@ -113,7 +116,14 @@ public class ChatActivity extends AppCompatActivity {
         return newMessage;
     }
 
+    private void closeKeyBoard(View view){
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
     public void sendMessage(View view){
+        closeKeyBoard(view);
+        
         Message newMessage = formatNewMessage();
         adapter.addMessage(newMessage);
         editMessage.setText("");

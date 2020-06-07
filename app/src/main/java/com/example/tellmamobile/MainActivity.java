@@ -2,9 +2,11 @@ package com.example.tellmamobile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         final Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                login();
+                login(v);
             }
         });
     }
@@ -110,7 +112,14 @@ public class MainActivity extends AppCompatActivity {
         Requests.getInstance(this.getApplicationContext()).addToRequestQueue(request);
     }
 
-    public void login(){
+    private void closeKeyBoard(View view){
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public void login(View view){
+
+        closeKeyBoard(view);
 
         final String name = textUser.getText().toString();
         final String pass = textPass.getText().toString();

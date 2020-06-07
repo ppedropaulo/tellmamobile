@@ -3,11 +3,13 @@ package com.example.tellmamobile;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -95,7 +97,14 @@ public class CreateNewChatDialogFragment extends DialogFragment {
         return json;
     }
 
-    private void createNewChat(){
+    private void closeKeyBoard(View view){
+        InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    private void createNewChat(View view){
+        closeKeyBoard(view);
+
         String name = editChatName.getText().toString();
         String users = editChatUsers.getText().toString();
 
@@ -108,14 +117,14 @@ public class CreateNewChatDialogFragment extends DialogFragment {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.new_chat_dialog, null);
+        final View view = inflater.inflate(R.layout.new_chat_dialog, null);
         builder.setTitle("Nova conversa");
         builder.setView(view);
 
         builder.setPositiveButton("Ok!", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mActivity = getActivity();
-                        createNewChat();
+                        createNewChat(view);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
