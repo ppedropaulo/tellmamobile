@@ -94,6 +94,10 @@ public class ChatListActivity extends AppCompatActivity {
         getChatRequest(userID);
     }
 
+    public void refresh(View view){
+        this.recreate();
+    }
+
     public void onLogout(View view){
         UserSession.eraseInstance(this.getApplicationContext());
 
