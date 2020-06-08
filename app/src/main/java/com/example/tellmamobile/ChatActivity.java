@@ -136,6 +136,10 @@ public class ChatActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String chatName = intent.getStringExtra("chatName");
 
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.bg_group_icon);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
         this.setTitle(chatName);
     }
 
