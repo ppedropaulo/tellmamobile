@@ -32,13 +32,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Random;
+import java.util.List;
+import java.util.Map;
 
 public class ChatActivity extends AppCompatActivity {
 
     private EditText editMessage;
     private MessageAdapter adapter;
     private WebSocket ws = null;
+    private LoadingDialog loading;
 
     public static final String TAG = "MESSAGES";
 
@@ -46,8 +48,9 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
         this.setTitleAccordingChat();
+        loading = new LoadingDialog(this);
+
         this.getMessages();
         this.openWSConnection();
 
@@ -175,6 +178,7 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         if (ws.isOpen()) {
+            loading.startLoadingDialog();
             ws.sendText(json.toString());
         } else {
             Toast.makeText(getApplicationContext(), "Erro na conexão. Tente novamente.", Toast.LENGTH_SHORT).show();
@@ -184,12 +188,14 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void openWSConnection(){
+        loading.startLoadingDialog();
         String urlFormatted = String.format("%1$s/%2$s", Constants.WEBSOCKET_URL, getChatId());
         try {
             ws = new WebSocketFactory().createSocket(urlFormatted);
             ws.addListener(new WebSocketAdapter() {
                 @Override
                 public void onTextFrame(WebSocket websocket, WebSocketFrame frame){
+                    loading.dismissDialog();
                     String frameText = frame.getPayloadText();
 
                     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
@@ -197,6 +203,11 @@ public class ChatActivity extends AppCompatActivity {
                     Message newMessage =  newMessageList[0];
 
                     adapter.addMessage(newMessage);
+                }
+
+                @Override
+                public void onConnected(WebSocket websocket, Map<String,List<String>> headers) {
+                    loading.dismissDialog();
                 }
 
             });
