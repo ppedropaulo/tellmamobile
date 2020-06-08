@@ -20,6 +20,7 @@ import com.google.gson.GsonBuilder;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketFactory;
+import com.neovisionaries.ws.client.WebSocketFrame;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -170,12 +171,16 @@ public class ChatActivity extends AppCompatActivity {
             ws = new WebSocketFactory().createSocket(urlFormatted);
             ws.addListener(new WebSocketAdapter() {
                 @Override
-                public void onTextMessage(WebSocket websocket, String response) throws Exception {
+                public void onTextFrame(WebSocket websocket, WebSocketFrame frame){
+                    String frameText = frame.getPayloadText();
+
                     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-                    Message newMessage = gson.fromJson(response.toString(), Message.class);
+                    Message[] newMessageList = gson.fromJson(frameText.toString(), Message[].class);
+                    Message newMessage =  newMessageList[0];
 
                     adapter.addMessage(newMessage);
                 }
+
             });
 
             ws.connectAsynchronously();
