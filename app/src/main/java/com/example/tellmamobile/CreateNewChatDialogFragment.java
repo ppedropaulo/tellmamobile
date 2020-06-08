@@ -43,14 +43,14 @@ public class CreateNewChatDialogFragment extends DialogFragment {
             String success = response.getString("sucessfull");
 
             if(success.equals("false")){
-                Toast.makeText(getContext(),"Erro ao criar sala",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"Erro ao criar conversa",Toast.LENGTH_SHORT).show();
                 return;
             }
 
             onSuccessfulNewChat();
 
         } catch (JSONException exception) {
-            Toast.makeText(getContext(),"Erro na conexão",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"Erro ao criar conversa",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -66,7 +66,7 @@ public class CreateNewChatDialogFragment extends DialogFragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("ERROR", String.valueOf(error));
+                Toast.makeText(getContext(),"Erro na conexão",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -91,7 +91,7 @@ public class CreateNewChatDialogFragment extends DialogFragment {
             json.put("name", name);
             json.put("users", users);
         } catch (JSONException e) {
-            e.printStackTrace();
+            Toast.makeText(mActivity, "Erro ao criar a conversa", Toast.LENGTH_SHORT).show();
         }
 
         return json;

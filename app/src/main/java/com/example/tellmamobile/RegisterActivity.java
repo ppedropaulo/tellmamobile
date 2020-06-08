@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -56,10 +55,11 @@ public class RegisterActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Registrado com sucesso",Toast.LENGTH_SHORT).show();
                 finish();
             }
+
             String error = response.getString("error");
             Toast.makeText(getApplicationContext(),error,Toast.LENGTH_SHORT).show();
         } catch (JSONException exception) {
-            Log.d("JSONException", "Json exception catched :".concat(exception.getMessage()));
+            Toast.makeText(getApplicationContext(),"Erro de conexão",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -79,7 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Erro de conexão",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -96,14 +96,13 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean isFormValid(String name, String pass, String passConf){
-
         if (isFormNotFilled(name, pass, passConf)) {
             Toast.makeText(this, "Todos os campos devem ser preenchidos", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (!isPasswordConfirmed(pass, passConf)){
-            Toast.makeText(this, "Todos os campos devem ser preenchidos", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Senhas diferentes", Toast.LENGTH_SHORT).show();
             return false;
         }
 

@@ -74,6 +74,27 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    private Long getChatId(){
+        Intent intent = getIntent();
+        return intent.getLongExtra("chatId", 0);
+    }
+
+    private void setTitleAccordingChat(){
+        Intent intent = getIntent();
+        String chatName = intent.getStringExtra("chatName");
+
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.bg_group_icon);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        this.setTitle(chatName);
+    }
+
+    private void closeKeyBoard(View view){
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
     private ArrayList<Message> sortMessages(ArrayList<Message> messages){
         Collections.sort(messages, new Comparator<Message>() {
             @Override
@@ -94,6 +115,7 @@ public class ChatActivity extends AppCompatActivity {
         Message[] newMessageList = gson.fromJson(response.toString(), Message[].class);
 
         if (newMessageList == null || newMessageList.length == 0) {
+            Toast.makeText(getApplicationContext(), "Não há mensagens", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -114,7 +136,7 @@ public class ChatActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Erro na conexão. Tente novamente.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -122,30 +144,9 @@ public class ChatActivity extends AppCompatActivity {
         Requests.getInstance(this.getApplicationContext()).addToRequestQueue(request);
     }
 
-    private Long getChatId(){
-        Intent intent = getIntent();
-        return intent.getLongExtra("chatId", 0);
-    }
-
     private void getMessages(){
         Long chatId = getChatId();
         getMessagesRequest(chatId);
-    }
-
-    private void setTitleAccordingChat(){
-        Intent intent = getIntent();
-        String chatName = intent.getStringExtra("chatName");
-
-
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(R.drawable.bg_group_icon);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
-        this.setTitle(chatName);
-    }
-
-    private void closeKeyBoard(View view){
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     private boolean isTextBoxNotFilled(){
@@ -169,11 +170,14 @@ public class ChatActivity extends AppCompatActivity {
             json.put("text", message);
             json.put("userId", userId);
         } catch (JSONException e) {
+            Toast.makeText(getApplicationContext(), "Erro na conexão. Tente novamente.", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
         if (ws.isOpen()) {
             ws.sendText(json.toString());
+        } else {
+            Toast.makeText(getApplicationContext(), "Erro na conexão. Tente novamente.", Toast.LENGTH_SHORT).show();
         }
 
         editMessage.setText("");
@@ -199,7 +203,7 @@ public class ChatActivity extends AppCompatActivity {
 
             ws.connectAsynchronously();
         } catch (IOException e) {
-            Toast.makeText(getApplicationContext(), "Erro de conexão", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Erro na conexão. Tente novamente.", Toast.LENGTH_SHORT).show();
         }
     }
 }

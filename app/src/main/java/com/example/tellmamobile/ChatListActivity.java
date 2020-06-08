@@ -63,6 +63,7 @@ public class ChatListActivity extends AppCompatActivity {
         Chat[] newChatList = gson.fromJson(response.toString(), Chat[].class);
 
         if (newChatList == null || newChatList.length == 0) {
+            Toast.makeText(getApplicationContext(), "Nenhuma conversa disponível", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -82,7 +83,7 @@ public class ChatListActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Erro de conexão", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -123,12 +124,15 @@ public class ChatListActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int val = item.getItemId();
+
         if(val == R.id.refresh){
             refresh(this);
         }
+
         if(val == R.id.create_chat){
             onNewChat(this);
         }
+
         if(val == R.id.exit){
             onLogout(this);
         }
