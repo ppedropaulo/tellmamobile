@@ -144,7 +144,17 @@ public class ChatActivity extends AppCompatActivity {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    private boolean isTextBoxNotFilled(){
+        String message = editMessage.getText().toString();
+        return message == null || message.isEmpty();
+    }
+
     public void sendMessage(View view){
+        if(isTextBoxNotFilled()){
+            Toast.makeText(getApplicationContext(), "Escreva uma mensagem", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         closeKeyBoard(view);
 
         String message = editMessage.getText().toString();
