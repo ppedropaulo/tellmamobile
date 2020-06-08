@@ -29,6 +29,7 @@ public class ChatListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_list);
 
+        this.setTitle("Conversas");
         getChats();
 
         ArrayList<Chat> initialData = new ArrayList<Chat>();
