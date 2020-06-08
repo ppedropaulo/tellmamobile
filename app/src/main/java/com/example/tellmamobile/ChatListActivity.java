@@ -98,7 +98,7 @@ public class ChatListActivity extends AppCompatActivity {
     }
 
     public void refresh(ChatListActivity chatListActivity){
-        this.recreate();
+        this.getChats();
     }
 
     public void onLogout(ChatListActivity chatListActivity){

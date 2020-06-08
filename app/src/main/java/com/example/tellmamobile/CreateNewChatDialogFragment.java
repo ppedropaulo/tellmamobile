@@ -35,7 +35,7 @@ public class CreateNewChatDialogFragment extends DialogFragment {
     private Activity mActivity;
 
     private void onSuccessfulNewChat(){
-        mActivity.recreate();
+        ((ChatListActivity) mActivity).getChats();
     }
 
     private void handleResponse(JSONObject response){
