@@ -176,13 +176,9 @@ public class ChatActivity extends AppCompatActivity {
 
                     adapter.addMessage(newMessage);
                 }
+            });
 
-                @Override
-                public void onBinaryMessage(WebSocket websocket, byte[] binary) throws Exception {
-                    System.out.println(binary);
-                }
-
-            }).connectAsynchronously();
+            ws.connectAsynchronously();
         } catch (IOException e) {
             Toast.makeText(getApplicationContext(), "Erro de conexão", Toast.LENGTH_SHORT).show();
         }
