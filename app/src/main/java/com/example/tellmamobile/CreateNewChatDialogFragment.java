@@ -97,12 +97,12 @@ public class CreateNewChatDialogFragment extends DialogFragment {
         return json;
     }
 
-    private boolean isFormFulled(String name, String users){
+    private boolean isFormNotFilled(String name, String users){
         return name == null || name.isEmpty() || users == null || users.isEmpty();
     }
 
     private boolean isFormValid(String name, String users){
-        if (isFormFulled(name, users)) {
+        if (isFormNotFilled(name, users)) {
             Toast.makeText(mActivity, "Erro: Todos os campos devem ser preenchidos", Toast.LENGTH_SHORT).show();
             return false;
         }

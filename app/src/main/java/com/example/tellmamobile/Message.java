@@ -10,6 +10,7 @@ public class Message {
     private Long chat;
     private String username;
     private Date date;
+    private Long userId;
 
     public Message(Long id, String text, Long chat, String username, Date date) {
         this.id = id;
@@ -42,5 +43,9 @@ public class Message {
     public String getFormattedDate(){
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy HH:mm");
         return format.format(date);
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 }

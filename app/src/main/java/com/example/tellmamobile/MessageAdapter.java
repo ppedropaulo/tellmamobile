@@ -71,5 +71,6 @@ public class MessageAdapter extends BaseAdapter {
 
     public void addMessage(Message newMessage){
         this.messages.add(newMessage);
+        this.notifyDataSetChanged();
     }
 }

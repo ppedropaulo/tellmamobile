@@ -2,7 +2,7 @@ package com.example.tellmamobile;
 
 public class Constants {
     public static String API_URL = "http://34.71.71.141/apirest";
-    public static String WEBSOCKET_URL = "http://35.202.129.42";
+        public static String WEBSOCKET_URL = "ws://35.202.129.42/tellma-server";
 
     public static String ROOMS_ENDPOINT = "/rooms";
     public static String LOGIN_ENDPOINT = "/login";

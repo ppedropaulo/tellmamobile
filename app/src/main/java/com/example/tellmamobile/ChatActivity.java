@@ -17,11 +17,20 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.neovisionaries.ws.client.WebSocket;
+import com.neovisionaries.ws.client.WebSocketAdapter;
+import com.neovisionaries.ws.client.WebSocketFactory;
+import com.neovisionaries.ws.client.WebSocketFrame;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Random;
 
@@ -29,6 +38,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private EditText editMessage;
     private MessageAdapter adapter;
+    private WebSocket ws = null;
 
     public static final String TAG = "MESSAGES";
 
@@ -39,6 +49,7 @@ public class ChatActivity extends AppCompatActivity {
 
         this.setTitleAccordingChat();
         this.getMessages();
+        this.openWSConnection();
 
         editMessage = findViewById(R.id.editMessage);
         ListView messagesListView = findViewById(R.id.listViewMensagens);
@@ -48,6 +59,34 @@ public class ChatActivity extends AppCompatActivity {
         ArrayList<Message> messages = new ArrayList<Message>();
         adapter = new MessageAdapter(this, messages);
         messagesListView.setAdapter(adapter);
+
+        messagesListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+        messagesListView.setStackFromBottom(true);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (ws != null) {
+            ws.disconnect();
+            ws = null;
+        }
+    }
+
+    private ArrayList<Message> sortMessages(ArrayList<Message> messages){
+        Collections.sort(messages, new Comparator<Message>() {
+            @Override
+            public int compare(Message m1, Message m2) {
+                Date date1 = m1.getDate();
+                Date date2 = m2.getDate();
+
+
+                return date1.compareTo(date2);
+            }
+        });
+
+        return messages;
     }
 
     private void handleMessagesResponse(JSONArray response){
@@ -59,6 +98,7 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         ArrayList<Message> newMessageArrayList = new ArrayList<Message>(Arrays.asList(newMessageList));
+        newMessageArrayList = sortMessages(newMessageArrayList);
         adapter.setMessages(newMessageArrayList);
     }
 
@@ -99,33 +139,63 @@ public class ChatActivity extends AppCompatActivity {
         this.setTitle(chatName);
     }
 
-    private Long getRandomID(){
-        Random rd = new Random();
-        return rd.nextLong();
-    }
-
-    private Message formatNewMessage(){
-        String message = editMessage.getText().toString();
-        Long chatId = getChatId();
-        assert UserSession.getInstance() != null;
-        String username = UserSession.getInstance().getUsername();
-        Date date = new Date();
-        Long newID = getRandomID();
-
-        Message newMessage = new Message(newID, message, chatId, username, date);
-        return newMessage;
-    }
-
     private void closeKeyBoard(View view){
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    private boolean isTextBoxNotFilled(){
+        String message = editMessage.getText().toString();
+        return message == null || message.isEmpty();
+    }
+
     public void sendMessage(View view){
+        if(isTextBoxNotFilled()){
+            Toast.makeText(getApplicationContext(), "Escreva uma mensagem", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         closeKeyBoard(view);
 
-        Message newMessage = formatNewMessage();
-        adapter.addMessage(newMessage);
+        String message = editMessage.getText().toString();
+        String userId = UserSession.getInstance().getId();
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put("text", message);
+            json.put("userId", userId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (ws.isOpen()) {
+            ws.sendText(json.toString());
+        }
+
         editMessage.setText("");
+    }
+
+    private void openWSConnection(){
+        String urlFormatted = String.format("%1$s/%2$s", Constants.WEBSOCKET_URL, getChatId());
+        try {
+            ws = new WebSocketFactory().createSocket(urlFormatted);
+            ws.addListener(new WebSocketAdapter() {
+                @Override
+                public void onTextFrame(WebSocket websocket, WebSocketFrame frame){
+                    String frameText = frame.getPayloadText();
+
+                    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+                    Message[] newMessageList = gson.fromJson(frameText.toString(), Message[].class);
+                    Message newMessage =  newMessageList[0];
+
+                    adapter.addMessage(newMessage);
+                }
+
+            });
+
+            ws.connectAsynchronously();
+        } catch (IOException e) {
+            Toast.makeText(getApplicationContext(), "Erro de conexão", Toast.LENGTH_SHORT).show();
+        }
     }
 }

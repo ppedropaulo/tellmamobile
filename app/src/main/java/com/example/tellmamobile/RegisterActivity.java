@@ -89,7 +89,7 @@ public class RegisterActivity extends AppCompatActivity {
         Requests.getInstance(this.getApplicationContext()).addToRequestQueue(request);
     }
 
-    private boolean isFormFulled(String name, String pass, String passConf){
+    private boolean isFormNotFilled(String name, String pass, String passConf){
         return name == null || name.isEmpty() || pass == null || pass.isEmpty() || passConf == null || passConf.isEmpty();
     }
 
@@ -99,7 +99,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private boolean isFormValid(String name, String pass, String passConf){
 
-        if (isFormFulled(name, pass, passConf)) {
+        if (isFormNotFilled(name, pass, passConf)) {
             Toast.makeText(this, "Todos os campos devem ser preenchidos", Toast.LENGTH_SHORT).show();
             return false;
         }
