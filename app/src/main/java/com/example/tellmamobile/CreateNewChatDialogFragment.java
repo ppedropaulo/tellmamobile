@@ -33,6 +33,7 @@ public class CreateNewChatDialogFragment extends DialogFragment {
     private EditText editChatName;
     private EditText editChatUsers;
     private Activity mActivity;
+    private LoadingDialog loading;
 
     private void onSuccessfulNewChat(){
         ((ChatListActivity) mActivity).getChats();
@@ -55,17 +56,20 @@ public class CreateNewChatDialogFragment extends DialogFragment {
     }
 
     private void newChatRequest(JSONObject json){
+        loading.startLoadingDialog();
         String url = String.format("%1$s%2$s", Constants.API_URL, Constants.ROOMS_ENDPOINT);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                loading.dismissDialog();
                 handleResponse(response);
             };
 
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                loading.dismissDialog();
                 Toast.makeText(getContext(),"Erro na conexão",Toast.LENGTH_SHORT).show();
             }
         });
@@ -141,6 +145,7 @@ public class CreateNewChatDialogFragment extends DialogFragment {
         builder.setPositiveButton("Ok!", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mActivity = getActivity();
+                        loading = new LoadingDialog(mActivity);
                         createNewChat(view);
                     }
                 })
