@@ -27,12 +27,15 @@ public class MainActivity extends AppCompatActivity {
     private EditText textUser;
     private EditText textPass;
     public static final String TAG = "LOGIN";
+    private LoadingDialog loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
+
+        loading = new LoadingDialog(this);
 
         textUser = findViewById(R.id.editText);
         textPass = findViewById(R.id.editText2);
@@ -89,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loginRequest(String name, String pass){
+        loading.startLoadingDialog();
+
         final Map<String, String> params = new HashMap();
         params.put("username",name);
         params.put("password",pass);
@@ -99,12 +104,14 @@ public class MainActivity extends AppCompatActivity {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url,parameters, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                loading.dismissDialog();
                 handleLoginResponse(response);
             };
 
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                loading.dismissDialog();
                 Toast.makeText(getApplicationContext(),"Erro na conexão",Toast.LENGTH_SHORT).show();
             }
         });

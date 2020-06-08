@@ -97,4 +97,5 @@
     <string name="chats">Conversas</string>
     <string name="new_chat">Nova Conversa</string>
     <string name="logout">Sair</string>
+    <string name="loading">Carregando...</string>
 </resources>
