@@ -1,8 +1,11 @@
 package com.example.tellmamobile;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -94,11 +97,11 @@ public class ChatListActivity extends AppCompatActivity {
         getChatRequest(userID);
     }
 
-    public void refresh(View view){
+    public void refresh(ChatListActivity chatListActivity){
         this.recreate();
     }
 
-    public void onLogout(View view){
+    public void onLogout(ChatListActivity chatListActivity){
         UserSession.eraseInstance(this.getApplicationContext());
 
         Intent intent = new Intent(this, MainActivity.class);
@@ -106,8 +109,31 @@ public class ChatListActivity extends AppCompatActivity {
         finish();
     }
 
-    public void onNewChat(View view){
+    public void onNewChat(ChatListActivity chatListActivity){
         CreateNewChatDialogFragment dialog = new CreateNewChatDialogFragment();
         dialog.show(getSupportFragmentManager(), "CreateNewChat");
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_chatlist, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int val = item.getItemId();
+        if(val == R.id.refresh){
+            refresh(this);
+        }
+        if(val == R.id.create_chat){
+            onNewChat(this);
+        }
+        if(val == R.id.exit){
+            onLogout(this);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }
