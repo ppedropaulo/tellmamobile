@@ -25,14 +25,16 @@ import java.util.Arrays;
 public class ChatListActivity extends AppCompatActivity {
 
     private ChatListAdapter chatListAdapter;
+    private LoadingDialog loading;
     public static final String TAG = "ROOMS";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_list);
-
         this.setTitle("Conversas");
+        loading = new LoadingDialog(this);
+
         getChats();
 
         ArrayList<Chat> initialData = new ArrayList<Chat>();
@@ -72,17 +74,20 @@ public class ChatListActivity extends AppCompatActivity {
     }
 
     private void getChatRequest(String userID){
+        loading.startLoadingDialog();
         String urlFormatted = String.format("%1$s%2$s?user_id=%3$s", Constants.API_URL, Constants.ROOMS_ENDPOINT, userID);
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, urlFormatted, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                loading.dismissDialog();
                 handleChatResponse(response);
             }
 
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                loading.dismissDialog();
                 Toast.makeText(getApplicationContext(), "Erro de conexão", Toast.LENGTH_SHORT).show();
             }
         });
