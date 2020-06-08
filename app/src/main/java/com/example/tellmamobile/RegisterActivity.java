@@ -54,13 +54,10 @@ public class RegisterActivity extends AppCompatActivity {
 
             if(success.equals("true")){
                 Toast.makeText(getApplicationContext(),"Registrado com sucesso",Toast.LENGTH_SHORT).show();
+                finish();
             }
-
-            if(success.equals("false")){
-                String error = response.getString("error");
-                Toast.makeText(getApplicationContext(),error,Toast.LENGTH_SHORT).show();
-            }
-
+            String error = response.getString("error");
+            Toast.makeText(getApplicationContext(),error,Toast.LENGTH_SHORT).show();
         } catch (JSONException exception) {
             Log.d("JSONException", "Json exception catched :".concat(exception.getMessage()));
         }
