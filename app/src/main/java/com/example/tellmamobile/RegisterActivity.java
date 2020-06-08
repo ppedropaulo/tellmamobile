@@ -26,6 +26,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText textUsername;
     private EditText textPassword;
     private EditText textPasswordConfirm;
+    private LoadingDialog loading;
     public static final String TAG = "REGISTER";
 
 
@@ -34,6 +35,8 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_register);
+
+        loading = new LoadingDialog(this);
 
         textUsername = findViewById(R.id.editText3);
         textPassword = findViewById(R.id.editText4);
@@ -64,6 +67,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void  registerRequest(String username, String password){
+        loading.startLoadingDialog();
         Map<String, String> params = new HashMap();
         params.put("username",username);
         params.put("password",password);
@@ -73,12 +77,14 @@ public class RegisterActivity extends AppCompatActivity {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url,parameters, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                loading.dismissDialog();
                 handleRegisterResponse(response);
             }
 
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                loading.dismissDialog();
                 Toast.makeText(getApplicationContext(),"Erro de conexão",Toast.LENGTH_SHORT).show();
             }
         });
