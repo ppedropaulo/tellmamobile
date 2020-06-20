@@ -19,20 +19,6 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/label_input_users">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edit_chat_users"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:digits="._-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\n"/>
-
-    </com.google.android.material.textfield.TextInputLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -54,13 +40,18 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/containedButton"
+            android:id="@+id/add_user_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5sp"
             android:layout_marginLeft="5sp"
-            android:text="@string/adicionar"
-            android:layout_marginStart="5sp" />
+            android:text="@string/adicionar" />
 
     </LinearLayout>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chip_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

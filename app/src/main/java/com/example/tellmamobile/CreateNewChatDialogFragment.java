@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
@@ -18,6 +18,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONArray;
@@ -25,13 +27,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class CreateNewChatDialogFragment extends DialogFragment {
     String TAG = "NEW_CHAT_MODAL";
     private TextInputEditText editChatName;
-    private TextInputEditText editChatUsers;
+    private TextInputEditText editChatUser;
+    private List<String> usersList;
+    private ChipGroup chipGroup;
     private Activity mActivity;
     private LoadingDialog loading;
 
@@ -78,11 +81,10 @@ public class CreateNewChatDialogFragment extends DialogFragment {
         Requests.getInstance(this.getContext()).addToRequestQueue(request);
     }
 
-    private JSONObject getNewChatJSON(String name, String users_text){
-        List<String> user_list = new ArrayList<String>(Arrays.asList(users_text.split("\n")));
+    private JSONObject getNewChatJSON(String name){
 
         JSONArray users = new JSONArray();
-        for(String user: user_list){
+        for(String user: usersList){
             users.put(user);
         }
 
@@ -101,12 +103,12 @@ public class CreateNewChatDialogFragment extends DialogFragment {
         return json;
     }
 
-    private boolean isFormNotFilled(String name, String users){
-        return name == null || name.isEmpty() || users == null || users.isEmpty();
+    private boolean isFormNotFilled(String name){
+        return name == null || name.isEmpty() || usersList == null || usersList.isEmpty();
     }
 
-    private boolean isFormValid(String name, String users){
-        if (isFormNotFilled(name, users)) {
+    private boolean isFormValid(String name){
+        if (isFormNotFilled(name)) {
             Toast.makeText(mActivity, "Erro: Todos os campos devem ser preenchidos", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -123,14 +125,50 @@ public class CreateNewChatDialogFragment extends DialogFragment {
         closeKeyBoard(view);
 
         String name = editChatName.getText().toString();
-        String users = editChatUsers.getText().toString();
 
-        if (!isFormValid(name, users)) {
+        if (!isFormValid(name)) {
             return;
         }
 
-        JSONObject json = getNewChatJSON(name, users);
+        JSONObject json = getNewChatJSON(name);
         newChatRequest(json);
+    }
+
+    private boolean isChatUserValid(String user){
+        assert UserSession.getInstance() != null;
+        String own_user = UserSession.getInstance().getUsername();
+
+        return !user.equals(own_user) && !usersList.contains(user);
+    }
+
+    private void addNewUser(){
+        final String user = editChatUser.getText().toString();
+        editChatUser.setText("");
+
+        if(!isChatUserValid(user)){
+            return;
+        }
+
+        usersList.add(user);
+        addNewChip(user);
+    }
+
+    private void addNewChip(final String user){
+        final Chip newChip = new Chip(getContext());
+        newChip.setText(user);
+        newChip.setClickable(true);
+        newChip.setCloseIconVisible(true);
+        newChip.setCheckable(true);
+
+        chipGroup.addView(newChip);
+
+        newChip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chipGroup.removeView(newChip);
+                usersList.remove(user);
+            }
+        });
     }
 
     @Override
@@ -156,7 +194,17 @@ public class CreateNewChatDialogFragment extends DialogFragment {
                 });
 
         editChatName = view.findViewById(R.id.edit_chat_name);
-        editChatUsers = view.findViewById(R.id.edit_chat_users);
+        editChatUser = view.findViewById(R.id.edit_chat_user);
+        chipGroup = view.findViewById(R.id.chip_group);
+
+        usersList = new ArrayList<>();
+
+        final Button button = view.findViewById(R.id.add_user_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                addNewUser();
+            }
+        });
 
 
         // Create the AlertDialog object and return it
