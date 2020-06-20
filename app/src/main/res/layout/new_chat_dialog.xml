@@ -1,20 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="16dp">
 
-    <EditText
-        android:id="@+id/edit_chat_name"
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Digite o nome da sala"
-        android:inputType="text"/>
+        android:hint="@string/label_name_chat">
 
-    <EditText
-        android:id="@+id/edit_chat_users"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_chat_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Digite os usuários"
-        android:digits="._-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\n"
-        android:layout_below="@id/edit_chat_name"/>
-</RelativeLayout>
+        android:hint="@string/label_input_users">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_chat_users"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:digits="._-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\n"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/label_input_users"
+            android:minWidth="200sp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_chat_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:digits="._-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\n" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/containedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5sp"
+            android:text="@string/adicionar"
+            android:layout_marginStart="5sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

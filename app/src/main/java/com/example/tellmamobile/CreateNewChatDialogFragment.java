@@ -18,6 +18,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,8 +30,8 @@ import java.util.List;
 
 public class CreateNewChatDialogFragment extends DialogFragment {
     String TAG = "NEW_CHAT_MODAL";
-    private EditText editChatName;
-    private EditText editChatUsers;
+    private TextInputEditText editChatName;
+    private TextInputEditText editChatUsers;
     private Activity mActivity;
     private LoadingDialog loading;
 

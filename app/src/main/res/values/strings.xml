@@ -98,4 +98,7 @@
     <string name="new_chat">Nova Conversa</string>
     <string name="logout">Sair</string>
     <string name="loading">Carregando...</string>
+    <string name="label_name_chat">Digite o nome da sala</string>
+    <string name="label_input_users">Digite os usuários</string>
+    <string name="adicionar">Add</string>
 </resources>
