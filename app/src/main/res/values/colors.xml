@@ -6,4 +6,5 @@
     <color name="bgCollor">#F9F9F9</color>
     <color name="balaoRemetente">#dbf9c4</color>
     <color name="bgChatlist">#FFFFFF</color>
+    <color name="transparent">@android:color/transparent</color>
 </resources>

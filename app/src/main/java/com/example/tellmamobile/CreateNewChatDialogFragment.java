@@ -180,18 +180,20 @@ public class CreateNewChatDialogFragment extends DialogFragment {
         builder.setTitle("Nova conversa");
         builder.setView(view);
 
-        builder.setPositiveButton("Ok!", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Criar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mActivity = getActivity();
                         loading = new LoadingDialog(mActivity);
                         createNewChat(view);
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User cancelled the dialog
                     }
                 });
+
+
 
         editChatName = view.findViewById(R.id.edit_chat_name);
         editChatUser = view.findViewById(R.id.edit_chat_user);
@@ -209,5 +211,14 @@ public class CreateNewChatDialogFragment extends DialogFragment {
 
         // Create the AlertDialog object and return it
         return builder.create();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        Button negative_button =  ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_NEGATIVE);
+        negative_button.setBackgroundColor(getResources().getColor(R.color.transparent));
+        negative_button.setTextColor(R.attr.color);
     }
 }

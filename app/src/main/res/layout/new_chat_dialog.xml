@@ -45,7 +45,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5sp"
             android:layout_marginLeft="5sp"
-            android:text="@string/adicionar" />
+            android:text="@string/adicionar"
+            style="@style/Widget.MaterialComponents.Button.TextButton" />
 
     </LinearLayout>
 
