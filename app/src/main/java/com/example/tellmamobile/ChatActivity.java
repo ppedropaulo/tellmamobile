@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -48,6 +49,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        this.setSubTitleAccordingChat();
         this.setTitleAccordingChat();
         loading = new LoadingDialog(this);
 
@@ -90,6 +92,7 @@ public class ChatActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.drawable.bg_group_icon);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setSubtitle("teste");
         this.setTitle(chatName);
     }
 
@@ -126,6 +129,45 @@ public class ChatActivity extends AppCompatActivity {
         newMessageArrayList = sortMessages(newMessageArrayList);
         adapter.setMessages(newMessageArrayList);
     }
+
+    private void setSubTitle(String subtitle){
+        getSupportActionBar().setSubtitle(subtitle);
+    }
+
+    private void setSubTitleAccordingChat(){
+        Long chatId = getChatId();
+        String urlFormatted = String.format("%1$s%2$s?room_id=%3$s", Constants.API_URL, Constants.USERS_ENDPOINT, chatId);
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, urlFormatted, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                String ans = "";
+                for(int i=0; i<response.length(); i++){
+                    JSONObject obj = (JSONObject) response.opt(i);
+                    try {
+                        String name = obj.getString("name");
+                        if(i==0) {
+                            ans += name;
+                        } else{
+                            ans += ", " + name;
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    setSubTitle(ans);
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "Erro na conexão. Tente novamente.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        request.setTag(TAG);
+        Requests.getInstance(this.getApplicationContext()).addToRequestQueue(request);
+    }
+
 
     private void getMessagesRequest(Long chatId){
         String urlFormatted = String.format("%1$s%2$s?room_id=%3$s", Constants.API_URL, Constants.MESSAGE_ENDPOINT, chatId);
