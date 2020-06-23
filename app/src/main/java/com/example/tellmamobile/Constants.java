@@ -8,4 +8,5 @@ public class Constants {
     public static String LOGIN_ENDPOINT = "/login";
     public static String REGISTER_ENDPOINT = "/signup";
     public static String MESSAGE_ENDPOINT = "/messages";
+    public static String USERS_ENDPOINT = "/users";
 }
