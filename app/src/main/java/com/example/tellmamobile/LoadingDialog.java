@@ -13,6 +13,10 @@ public class LoadingDialog {
     }
 
     void startLoadingDialog(){
+        if (dialog != null && dialog.isShowing()){
+            return;
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
         LayoutInflater inflater = activity.getLayoutInflater();
@@ -20,11 +24,13 @@ public class LoadingDialog {
         builder.setCancelable(true);
 
         dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(true);
         dialog.show();
     }
 
     void dismissDialog(){
-        if(dialog != null){
+        if(dialog != null && dialog.isShowing()){
             dialog.dismiss();
         }
     }
