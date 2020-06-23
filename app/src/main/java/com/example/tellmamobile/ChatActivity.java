@@ -32,6 +32,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -39,6 +41,9 @@ public class ChatActivity extends AppCompatActivity {
     private MessageAdapter adapter;
     private WebSocket ws = null;
     private LoadingDialog loading;
+
+    private boolean messagesGotten;
+    private boolean wsConnected;
 
     public static final String TAG = "MESSAGES";
 
@@ -49,10 +54,9 @@ public class ChatActivity extends AppCompatActivity {
         this.setTitleAccordingChat();
         loading = new LoadingDialog(this);
 
-        //loading.startLoadingDialog();
-
-        // loading.dismissDialog();
-
+        messagesGotten = false;
+        wsConnected = false;
+        loading.startLoadingDialog();
 
         this.getMessages();
         this.openWSConnection();
@@ -136,12 +140,16 @@ public class ChatActivity extends AppCompatActivity {
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, urlFormatted, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                messagesGotten = true;
+                closeLoadingDialog();
                 handleMessagesResponse(response);
             }
 
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                messagesGotten = true;
+                closeLoadingDialog();
                 Toast.makeText(getApplicationContext(), "Erro na conexão. Tente novamente.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -181,7 +189,7 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         if (ws.isOpen()) {
-            // loading.startLoadingDialog();
+            loading.startLoadingDialog();
             ws.sendText(json.toString());
         } else {
             Toast.makeText(getApplicationContext(), "Erro na conexão. Tente novamente.", Toast.LENGTH_SHORT).show();
@@ -191,14 +199,12 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void openWSConnection(){
-        //loading.startLoadingDialog();
         String urlFormatted = String.format("%1$s/%2$s", Constants.WEBSOCKET_URL, getChatId());
         try {
             ws = new WebSocketFactory().createSocket(urlFormatted);
             ws.addListener(new WebSocketAdapter() {
                 @Override
                 public void onTextFrame(WebSocket websocket, WebSocketFrame frame){
-                    // loading.dismissDialog();
                     String frameText = frame.getPayloadText();
 
                     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
@@ -206,19 +212,25 @@ public class ChatActivity extends AppCompatActivity {
                     Message newMessage =  newMessageList[0];
 
                     adapter.addMessage(newMessage);
-                }
-
-                /*
-                @Override
-                public void onConnected(WebSocket websocket, Map<String,List<String>> headers) {
                     loading.dismissDialog();
                 }
-                */
+
+                @Override
+                public void onConnected(WebSocket websocket, Map<String, List<String>> headers) {
+                    wsConnected = true;
+                    closeLoadingDialog();
+                }
             });
 
             ws.connectAsynchronously();
         } catch (IOException e) {
             Toast.makeText(getApplicationContext(), "Erro na conexão. Tente novamente.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void closeLoadingDialog(){
+        if(messagesGotten && wsConnected){
+            loading.dismissDialog();
         }
     }
 }
