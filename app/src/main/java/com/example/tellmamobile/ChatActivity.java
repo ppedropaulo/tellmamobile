@@ -252,8 +252,8 @@ public class ChatActivity extends AppCompatActivity {
                     Message[] newMessageList = gson.fromJson(frameText.toString(), Message[].class);
                     Message newMessage =  newMessageList[0];
 
-                    adapter.addMessage(newMessage);
                     loading.dismissDialog();
+                    adapter.addMessage(newMessage);
                 }
 
                 @Override

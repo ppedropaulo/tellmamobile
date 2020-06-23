@@ -65,12 +65,16 @@ public class MessageAdapter extends BaseAdapter {
     };
 
     public void setMessages(ArrayList<Message> messageListDataSet) {
-        this.messages = messageListDataSet;
+        this.messages.clear();
+        this.messages.addAll(messageListDataSet);
         this.notifyDataSetChanged();
     }
 
     public void addMessage(Message newMessage){
-        this.messages.add(newMessage);
-        this.notifyDataSetChanged();
+        ArrayList<Message> messageListDataSet = new ArrayList<Message>();
+        messageListDataSet.addAll(this.messages);
+        messageListDataSet.add(newMessage);
+
+        setMessages(messageListDataSet);
     }
 }
