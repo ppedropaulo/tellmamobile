@@ -21,6 +21,9 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 public class ChatListActivity extends AppCompatActivity {
 
@@ -70,7 +73,7 @@ public class ChatListActivity extends AppCompatActivity {
         }
 
         ArrayList<Chat> newChatArrayList = new ArrayList<Chat>(Arrays.asList(newChatList));
-        chatListAdapter.setChatListDataSet(newChatArrayList);
+        chatListAdapter.setChatListDataSet(sortChats(newChatArrayList));
     }
 
     private void getChatRequest(String userID){
@@ -118,6 +121,21 @@ public class ChatListActivity extends AppCompatActivity {
     public void onNewChat(ChatListActivity chatListActivity){
         CreateNewChatDialogFragment dialog = new CreateNewChatDialogFragment();
         dialog.show(getSupportFragmentManager(), "CreateNewChat");
+    }
+
+    private ArrayList<Chat> sortChats(ArrayList<Chat> chats){
+        Collections.sort(chats, new Comparator<Chat>() {
+            @Override
+            public int compare(Chat c1, Chat c2) {
+                Date date1 = c1.getLastmessages().getDate();
+                Date date2 = c2.getLastmessages().getDate();
+
+
+                return date2.compareTo(date1);
+            }
+        });
+
+        return chats;
     }
 
     @Override
