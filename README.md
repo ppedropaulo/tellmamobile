@@ -15,6 +15,11 @@ ChatList             |  Chat
 :-------------------------:|:-------------------------:
 ![](https://github.com/ppedropaulo/tellmamobile/blob/master/app/media/chatlist_tellma.jpg?raw=true)|![](https://github.com/ppedropaulo/tellmamobile/blob/master/app/media/message_tellma.jpg?raw=true)
 
+New Chat
+:-------------------------:|
+![](https://github.com/ppedropaulo/tellmamobile/blob/master/app/media/new_chat_tellma.jpeg?raw=true)
+
+
 # Arquitetura e Backend
 
 ![](https://github.com/ppedropaulo/tellmamobile/blob/master/app/media/mobile_architecture.png?raw=true)
