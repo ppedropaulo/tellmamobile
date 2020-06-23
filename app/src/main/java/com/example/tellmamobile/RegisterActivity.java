@@ -57,10 +57,10 @@ public class RegisterActivity extends AppCompatActivity {
             if(success.equals("true")){
                 Toast.makeText(getApplicationContext(),"Registrado com sucesso",Toast.LENGTH_SHORT).show();
                 finish();
+            } else {
+                String error = response.getString("error");
+                Toast.makeText(getApplicationContext(),error,Toast.LENGTH_SHORT).show();
             }
-
-            String error = response.getString("error");
-            Toast.makeText(getApplicationContext(),error,Toast.LENGTH_SHORT).show();
         } catch (JSONException exception) {
             Toast.makeText(getApplicationContext(),"Erro de conexão",Toast.LENGTH_SHORT).show();
         }
