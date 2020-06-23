@@ -39,8 +39,6 @@ public class ChatListActivity extends AppCompatActivity {
         this.setTitle("Conversas");
         loading = new LoadingDialog(this);
 
-        getChats();
-
         ArrayList<Chat> initialData = new ArrayList<Chat>();
         chatListAdapter = new ChatListAdapter(this, initialData);
 
@@ -54,6 +52,12 @@ public class ChatListActivity extends AppCompatActivity {
         });
 
         listView.setAdapter(chatListAdapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getChats();
     }
 
     private void goToChat(Long id, String name){
