@@ -39,6 +39,13 @@ public class ChatListAdapter extends BaseAdapter {
         TextView textView = (TextView) view.findViewById(R.id.chat_text);
         textView.setText(chat.getName());
 
+        TextView messageTextView = (TextView) view.findViewById(R.id.message_text);
+        String subtitle = String.format("%s: %s", chat.getLastmessages().getUsername(), chat.getLastmessages().getText());
+        messageTextView.setText(subtitle);
+
+        TextView dateTextView = (TextView) view.findViewById(R.id.chat_date);
+        dateTextView.setText(chat.getLastmessages().getFormattedDate());
+
         return view;
 
     }
