@@ -230,7 +230,6 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         if (ws.isOpen()) {
-            loading.startLoadingDialog();
             ws.sendText(json.toString());
         } else {
             Toast.makeText(getApplicationContext(), "Erro na conexão. Tente novamente.", Toast.LENGTH_SHORT).show();
@@ -252,7 +251,6 @@ public class ChatActivity extends AppCompatActivity {
                     Message[] newMessageList = gson.fromJson(frameText.toString(), Message[].class);
                     Message newMessage =  newMessageList[0];
 
-                    loading.dismissDialog();
                     adapter.addMessage(newMessage);
                 }
 
