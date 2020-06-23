@@ -1,6 +1,5 @@
 package com.example.tellmamobile;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,11 +39,11 @@ public class ChatListAdapter extends BaseAdapter {
         textView.setText(chat.getName());
 
         TextView messageTextView = (TextView) view.findViewById(R.id.message_text);
-        String subtitle = String.format("%s: %s", chat.getLastmessages().getUsername(), chat.getLastmessages().getText());
+        String subtitle = chat.hasLastMessage() ? String.format("%s: %s", chat.getLastmessagesInfo().getUsername(), chat.getLastmessagesInfo().getText()) : "";
         messageTextView.setText(subtitle);
 
         TextView dateTextView = (TextView) view.findViewById(R.id.chat_date);
-        dateTextView.setText(chat.getLastmessages().getFormattedDate());
+        dateTextView.setText(chat.getLastmessagesInfo().getFormattedDate());
 
         return view;
 

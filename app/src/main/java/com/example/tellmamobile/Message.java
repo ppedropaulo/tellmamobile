@@ -42,6 +42,10 @@ public class Message {
     }
 
     public String getFormattedDate(){
+        if (date == null){
+            return "";
+        }
+
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy HH:mm");
         format.setTimeZone(TimeZone.getTimeZone("GMT-6"));
         return format.format(date);

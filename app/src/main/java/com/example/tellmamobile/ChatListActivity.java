@@ -16,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 
@@ -64,7 +65,7 @@ public class ChatListActivity extends AppCompatActivity {
 
 
     private void handleChatResponse(JSONArray response){
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         Chat[] newChatList = gson.fromJson(response.toString(), Chat[].class);
 
         if (newChatList == null || newChatList.length == 0) {
@@ -127,9 +128,12 @@ public class ChatListActivity extends AppCompatActivity {
         Collections.sort(chats, new Comparator<Chat>() {
             @Override
             public int compare(Chat c1, Chat c2) {
-                Date date1 = c1.getLastmessages().getDate();
-                Date date2 = c2.getLastmessages().getDate();
+                if(!c1.hasLastMessage()){
+                    return -1;
+                }
 
+                Date date1 = c1.getLastmessagesInfo().getDate();
+                Date date2 = c2.getLastmessagesInfo().getDate();
 
                 return date2.compareTo(date1);
             }

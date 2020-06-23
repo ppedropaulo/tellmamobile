@@ -5,13 +5,19 @@ import java.util.Date;
 public class Chat {
     private Long roomId;
     private String name;
-    private Message lastmessages;
+    private Boolean lastmessage;
+    private String text;
+    private String username;
+    private Date timestamp;
 
 
-    public Chat(Long roomId, String name, Message lastmessages) {
+    public Chat(Long roomId, String name, Boolean lastmessage, String text, String username, Date timestamp) {
         this.roomId = roomId;
         this.name = name;
-        this.lastmessages = lastmessages;
+        this.lastmessage = lastmessage;
+        this.text = text;
+        this.username = username;
+        this.timestamp = timestamp;
     }
 
 
@@ -23,9 +29,15 @@ public class Chat {
         return name;
     }
 
-    public Message getLastmessages() {
-        // TODO: fix it
-        lastmessages = new Message((long) 1, "testando ultima mensagem que é muito grande, de forma que passe o limite da tela, acho que já ta bom", roomId, "girardin", new Date());
-        return lastmessages;
+    public Message getLastmessagesInfo() {
+        if(!lastmessage){
+            return new Message((long) 1, "", roomId, "", null);
+        }
+
+        return new Message((long) 1, text, roomId, username, timestamp);
+    }
+
+    public Boolean hasLastMessage(){
+        return lastmessage;
     }
 }
