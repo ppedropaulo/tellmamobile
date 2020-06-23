@@ -2,6 +2,7 @@ package com.example.tellmamobile;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class Message {
 
@@ -42,6 +43,7 @@ public class Message {
 
     public String getFormattedDate(){
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy HH:mm");
+        format.setTimeZone(TimeZone.getTimeZone("GMT-6"));
         return format.format(date);
     }
 
